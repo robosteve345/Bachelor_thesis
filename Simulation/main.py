@@ -375,7 +375,7 @@ def main():
     #     #           )
     #     # plt.show()
     #################################################
-    plt.savefig('CDW_sim_HK0L0={}{}{}'.format(h, k0, l0), dpi=300)
+    # plt.savefig('CDW_sim_HK0L0={}{}{}'.format(h, k0, l0), dpi=300)
     plt.show()
 
 

@@ -1,5 +1,6 @@
 """Simulation of CDW pattern UNIT CELL in k-space for one unit cell of EuGa2Al2 with symmetry I4/mmm
 """
+"Ein erster Commit-Versuch"
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rc('text', usetex=True)
