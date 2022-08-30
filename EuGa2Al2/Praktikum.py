@@ -119,7 +119,7 @@ def lin_reg2(x, y, dy, sigma_y, Titel=None, dx=None, sigma_x=None, p=None,
     plt.yticks(fontsize=14)
     plt.legend(fontsize=15)
     plt.show()
-    plt.savefig("{}.png".format(Titel), dpi=300)
+    # plt.savefig("{}.png".format(Titel), dpi=300)
     
     return m, sigma_m, dm, sigma_m2
 
@@ -214,7 +214,7 @@ def lin_reg(x, y, dy, sigma_y, Titel=None, dx=None, sigma_x=None, plot=False, p=
         # plt.savefig("{}.png".format(Titel), dpi=300)
 
     else:
-         plt.savefig("{}.png".format(Titel), dpi=300)
+         print("Hello world") #plt.savefig("{}.png".format(Titel), dpi=300)
     
     return m, sigma_m, dm, t, sigma_t, dt
 

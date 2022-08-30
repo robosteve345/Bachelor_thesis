@@ -60,17 +60,17 @@ sinlambda4b2, obs4b2, cal4b2, sigma4b2, DIFsigma4b2 = np.loadtxt("euga2al24b2.tx
 # sinlambda1a_2_303K, obs1a_2_303K, cal1a_2_303K, sigma1a_2_303K, DIFsigma1a_2_303K = np.loadtxt("euga2al2303K.txt",
 #                                                       usecols=(0, 1, 2, 3, 4), unpack=True, skiprows=2)
 
-# # a,c,V,z
-# T = np.array([100, 150, 200, 293]) # temperature in K
-# a = np.array([4.326090, 4.329725, 4.340179, 4.353075]) # a in angstrom cell parameter
-# da = np.array([0.000354, 0.000300, 0.000358, 0.000397])
-# c = np.array([10.916447, 10.922541, 10.935386, 10.970318]) # c in angstrom cell parameter
-# dc = np.array([0.001149, 0.001033, 0.001208, 0.001332])
-# z = np.array([0.38626856, 0.38572708, 0.38559416, 0.38490966]) # np.array([0.38716856, 0.38572708, 0.38559416, 0.38626856]) # np.array([0.3860138, 0.38572708, 0.38559416, 0.38490966]) # Wyckoff z-position Gallium # 0.38716856
-# dz = np.array([0.12992020e-02, 0.87138213e-03, 0.79795939e-03, 0.71762921e-03])
-# V = a**2*c # Volume in angstrom^3 cell parameter
-# # print("V_euga2al2 = {}".format(V))
-# dV = V*np.sqrt((2*da/a)**2 + (dc/c)**2)
+# a,c,V,z
+T = np.array([100, 150, 200, 293]) # temperature in K
+a = np.array([4.326090, 4.329725, 4.340179, 4.353075]) # a in angstrom cell parameter
+da = np.array([0.000354, 0.000300, 0.000358, 0.000397])
+c = np.array([10.916447, 10.922541, 10.935386, 10.970318]) # c in angstrom cell parameter
+dc = np.array([0.001149, 0.001033, 0.001208, 0.001332])
+z = np.array([0.38626856, 0.38572708, 0.38559416, 0.38490966]) # np.array([0.38716856, 0.38572708, 0.38559416, 0.38626856]) # np.array([0.3860138, 0.38572708, 0.38559416, 0.38490966]) # Wyckoff z-position Gallium # 0.38716856
+dz = np.array([0.12992020e-02, 0.87138213e-03, 0.79795939e-03, 0.71762921e-03])
+V = a**2*c # Volume in angstrom^3 cell parameter
+# print("V_euga2al2 = {}".format(V))
+dV = V*np.sqrt((2*da/a)**2 + (dc/c)**2)
 
 
 # ########################################
@@ -170,79 +170,95 @@ def main():
     # stavinoah(z[1], dz[1], a=a[1], da=da[1], c=c[1], dc=dc[1], sample="150K")
     # stavinoah(z[2], dz[2], a=a[2], da=da[2], c=c[2], dc=dc[2], sample="200K")
     # stavinoah(z[3], dz[3], a=a[3], da=da[3], c=c[3], dc=dc[3], sample="293K")
-    # print("euga2al2 d12={}, d22={}, theta={}".format(D12, D22, Theta))
-
-    # # Temperature measurement Plot
-    # # a, c, z
-    # fig, ax = plt.subplots()
+    # print("euga2al2 d12={}+-{}, d22={}+-{}, theta={}+-{}".format(D12,dD12, D22, dD22,Theta, dTheta))
+    #
+    # fig, ax1 = plt.subplots()
     # fig.subplots_adjust(right=0.75)
-    # twin1 = ax.twinx()
-    # twin2 = ax.twinx()
-    # # Offset the right spine of twin2.  The ticks and label have already been
-    # # placed on the right by twinx above.
-    # twin2.spines.right.set_position(("axes", 1.2))
-    # p1, = ax.plot(T, z, "b-", marker='o', linestyle='--', lw='0.8'
-    #                    )
-    # p2, = twin1.plot(T, a, "g-", marker='o', linestyle='--', lw='0.8'
-    #                      )
-    # p3, = twin2.plot(T, c, "r-", marker='o', linestyle='--', lw='0.8'
-    #                      )
-    # ax.yaxis.label.set_color(p1.get_color())
-    # twin1.yaxis.label.set_color(p2.get_color())
-    # twin2.yaxis.label.set_color(p3.get_color())
-    #
     # tkw = dict(size=4, width=1.5)
-    # ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
-    # twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
-    # twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
-    # ax.tick_params(axis='x', labelsize=12, direction='in', **tkw)
-    # ax.set_ylabel(r'$z$', fontsize=13) #V(Å$^3$)
-    # twin1.set_ylabel(r'$a(Å)$', fontsize=13)
-    # twin2.set_ylabel(r'$c(Å)$', fontsize=13)
-    # ax.set_xticks([100,150,200,250,293])
-    # ax.set_yticks([0.3850, 0.3853, 0.3856, 0.3859, 0.3862])
-    # # linear fits for a,c,z
-    # # lin_reg(T, z, dy=np.zeros(4), sigma_y=dz, plot=True)
-    # lin_reg(T, a, dy=np.zeros(4), sigma_y=da)
-    # lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)
-    # # print("EuGa2Al2 cell parameters at T=0K with linear fit with statistical uncertainties from \
-    # # Crysalis and Fullprof: a={}, c={}, z={}".format(lin_reg(T, z, dy=np.zeros(4), sigma_y=dz)[3], lin_reg(T, a, dy=np.zeros(4), sigma_y=da)[3],
-    #        #                                          lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)[3]))
-    # ax.set_xlabel(r'T(K)', fontsize=12)
-    # plt.savefig("stavinoah1_euga2al2", dpi=300)
-
-    """d12, d22, theta"""
-    # fig, ax = plt.subplots()
+    #
+    # ax1.set_xlabel(r'T(K)', fontsize=30)
+    # ax1.set_ylabel(r'$a$(Å)', color='b', fontsize=30)
+    # ax1.errorbar(T, a, yerr=da, color='b', linestyle='', lw=0.8, marker='o', markersize=12, capsize=4, label=r'$a$')
+    # m, sigma_m , dm, t, sigma_t, dt = lin_reg(T, a, dy=np.zeros(4), sigma_y=da, plot=False)
+    # ax1.plot(np.linspace(80, 310, 1000), m*np.linspace(80, 310, 1000) + t, lw=1.5, c='b', ls='-')
+    # print("a: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    # ax1.tick_params(axis='y', labelcolor='b', labelsize=30)
+    # # ax1.set_xticks([100, 180, 200, 293])
+    # ax1.locator_params(axis='y', nbins=3)
+    # ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    # ax1.legend(fontsize=27, loc='upper left')
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # ax2.set_ylabel('Temperature', color='g')
+    # m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, c, dy=np.zeros(4), sigma_y=dc, plot=False)
+    # ax2.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='g', ls='-')
+    # print("c: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    # ax2.errorbar(T, c, yerr=dc, color='g', linestyle='', lw=0.8, marker='s', markersize=12, capsize=4, label=r'$c$')
+    # ax2.set_ylabel(r'$c$(Å)', color='g', fontsize=30)
+    # ax2.tick_params(axis='y', labelcolor='g', labelsize=30, **tkw)
+    # ax2.text(x=210, y=10.965, s=r'(a)', style='oblique', fontsize=27)
+    # ax2.text(x=80, y=10.950, s=r'EuGa$_2$Al$_2$', style='italic', fontsize=30, fontweight='bold')
+    # ax2.legend(fontsize=27, loc='lower right')
+    # plt.tight_layout()
+    # plt.savefig("stavinoah1_euga2al2_1.jpg", dpi=300)
+    #
+    # fig, ax1 = plt.subplots()
     # fig.subplots_adjust(right=0.75)
-    # twin1 = ax.twinx()
-    # twin2 = ax.twinx()
-    # # Offset the right spine of twin2.  The ticks and label have already been
-    # # placed on the right by twinx above.
-    # twin2.spines.right.set_position(("axes", 1.2))
-    # # print("Theta={}".format(Theta))
-    # p1, = ax.plot(T, D12, "b-", marker='o', linestyle='--', lw='0.8'
-    #                    )
-    # p2, = twin1.plot(T, D22, "g-", marker='o', linestyle='--', lw='0.8'
-    #                      )
-    # p3, = twin2.plot(T, Theta, "r-", marker='o', linestyle='--', lw='0.8'
-    #                      )
-    # ax.yaxis.label.set_color(p1.get_color())
-    # twin1.yaxis.label.set_color(p2.get_color())
-    # twin2.yaxis.label.set_color(p3.get_color())
-    #
     # tkw = dict(size=4, width=1.5)
-    # ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
-    # twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
-    # twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
-    # ax.tick_params(axis='x',labelsize=12, direction='in', **tkw)
-    # ax.set_ylabel(r'd$_{12}$(Å)', fontsize=13)
-    # twin1.set_ylabel(r'd$_{22}$(Å)', fontsize=13)
-    # twin2.set_ylabel(r'$\theta$(°)', fontsize=13)
-    # ax.set_xticks([100, 150, 200, 250, 293])
-    # ax.set_xlabel(r'T(K)', fontsize=12)
+    # ax1.set_xlabel(r'T(K)', fontsize=30)
+    # ax1.set_ylabel(r'$d_{12}$(Å)', color='m', fontsize=30)
+    # m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, D12, dy=np.zeros(4), sigma_y=dD12, plot=False)
+    # ax1.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='m', ls='-')
+    # print("d12: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    # ax1.errorbar(T, D12, yerr=dD12, color='m', linestyle='', lw=0.8, marker='o', markersize=12, capsize=4, label=r'$d_{12}$')
+    # ax1.tick_params(axis='y', labelcolor='m', labelsize=30)
+    # # ax1.set_xticks([100, 150, 200, 293])
+    # ax1.locator_params(axis='y', nbins=3)
+    # ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    # ax1.legend(fontsize=27, loc='upper left')
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, D22, dy=np.zeros(4), sigma_y=dD22, plot=False)
+    # ax2.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='y', ls='-')
+    # print("d22: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    # ax2.errorbar(T, D22, yerr=dD22, color='y', linestyle='', lw=0.8, marker='s', markersize=12, capsize=4, label=r'$d_{22}$')
+    # ax2.set_ylabel(r'$d_{22}$(Å)', color='y', fontsize=30)
+    # ax2.tick_params(axis='y', labelcolor='y', labelsize=30, **tkw)
+    # ax2.locator_params(axis='y', nbins=3)
+    # ax2.text(x=220, y=2.536, s=r'(b)', style='oblique', fontsize=27)
+    # ax2.legend(fontsize=27, loc='lower right')
+    # plt.tight_layout()
+    # plt.savefig("stavinoah1_euga2al2_2.jpg", dpi=300)
     #
-    # # # # ax.legend(handles=[p1, p2, p3])
-    # plt.savefig("stavinoah2_euga2al2", dpi=300)
+    # fig, ax1 = plt.subplots()
+    # fig.subplots_adjust(right=0.75)
+    # tkw = dict(size=4, width=1.5)
+    # ax1.set_xlabel(r'T(K)', fontsize=30)
+    # ax1.set_ylabel(r'$z$', color='r', fontsize=30)
+    # m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, z, dy=np.zeros(4), sigma_y=dz, plot=False)
+    # ax1.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='r', ls='-')
+    # print("z: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    # ax1.errorbar(T, z, yerr=dz, color='r', linestyle='', lw=0.8, marker='o', markersize=12, capsize=4, label=r'$z$')
+    # ax1.tick_params(axis='y', labelcolor='r', labelsize=30)
+    # # ax1.set_xticks([100, 180, 200, 293])
+    # ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    # ax1.locator_params(axis='y', nbins=3)
+    # ax1.legend(fontsize=27, loc='upper center')
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, Theta, dy=np.zeros(4), sigma_y=dTheta, plot=False)
+    # ax2.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='c', ls='-')
+    # print("a: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    # ax2.errorbar(T, Theta, yerr=dTheta, color='c', linestyle='', lw=0.8, marker='s', markersize=12, capsize=4, label=r'$\theta$')
+    # ax2.set_ylabel(r'$\theta$(°)', color='c', fontsize=30)
+    # ax2.tick_params(axis='y', labelcolor='c', labelsize=30, **tkw)
+    # ax2.text(x=255, y=111.625, s=r'(c)', style='oblique', fontsize=27)
+    # ax2.locator_params(axis='y', nbins=3)
+    # ax2.legend(fontsize=27, loc='lower center')
+    # plt.tight_layout()
+    # plt.savefig("stavinoah1_euga2al2_3.jpg", dpi=300)
     # plt.show()
 
 
@@ -267,129 +283,194 @@ def main():
     # plt.savefig("euga4_refinement_crystal1", dpi=300)
     # plt.show()
 
-    """Temperature measurements"""
-    # a,c,V,z
-    T = np.array([100, 200, 250, 293])  # temperature in K    150
-    a = np.array([4.375400, 4.387414, 4.387225, 4.403015])  # a in angstrom cell parameter 4.360766
-    da = np.array([0.000735, 0.000352, 0.000246, 0.000308]) # 0.000603
-    c = np.array([10.640713, 10.667181, 10.656446, 10.680388])  # c in angstrom cell parameter    10.605626
-    dc = np.array([0.002541, 0.001104, 0.000836, 0.000977])              #0.002070
-    B_eu = np.array([0.48221183, 0.89008331, 0.90516782, 1.1800470 ])      #0.95252866
-    dB_eu = np.array([0.48541449E-01 , 0.97667180E-01, 0.45610957E-01, 0.75068019E-01])    #0.18984486
-    B_ga1 = np.array([ 0.58138323 , 0.84271991, 0.83874643, 0.90734732])  #1.3838449
-    dB_ga1 = np.array([0.61789177E-01, 0.10146012, 0.46784237E-01, 0.71538962E-01])    #0.26306602
-    B_ga2 = np.array([0.40126890, 1.0198165, 0.83857411, 0.98966235])   #0.83032626
-    dB_ga2 = np.array([0.70558026E-01, 0.10149224, 0.58203440E-01, 0.85263073E-01]) #0.18114553
-    z = np.array([0.38288972, 0.38317543, 0.38373634,  0.38377333])  # Wyckoff z-position Gallium # 0.38716856   0.38448524
-    dz = np.array([0.28512880E-03, 0.31877682E-03, 0.17599505E-03, 0.26537123E-03])           #0.59160584E-03
-    V = a ** 2 * c  # Volume in angstrom^3 cell parameter
-    # print("V_euga2al2 = {}".format(V))
-    dV = V * np.sqrt((2 * da / a) ** 2 + (dc / c) ** 2)
+    # """Temperature measurements"""
+    # # a,c,V,z
+    # T = np.array([100, 200, 250, 293])  # temperature in K    150
+    # a = np.array([4.375400, 4.387414, 4.387225, 4.403015])  # a in angstrom cell parameter 4.360766
+    # da = np.array([0.000735, 0.000352, 0.000246, 0.000308]) # 0.000603
+    # c = np.array([10.640713, 10.667181, 10.656446, 10.680388])  # c in angstrom cell parameter    10.605626
+    # dc = np.array([0.002541, 0.001104, 0.000836, 0.000977])              #0.002070
+    # B_eu = np.array([0.48221183, 0.89008331, 0.90516782, 1.1800470 ])      #0.95252866
+    # dB_eu = np.array([0.48541449E-01 , 0.97667180E-01, 0.45610957E-01, 0.75068019E-01])    #0.18984486
+    # B_ga1 = np.array([ 0.58138323 , 0.84271991, 0.83874643, 0.90734732])  #1.3838449
+    # dB_ga1 = np.array([0.61789177E-01, 0.10146012, 0.46784237E-01, 0.71538962E-01])    #0.26306602
+    # B_ga2 = np.array([0.40126890, 1.0198165, 0.83857411, 0.98966235])   #0.83032626
+    # dB_ga2 = np.array([0.70558026E-01, 0.10149224, 0.58203440E-01, 0.85263073E-01]) #0.18114553
+    # z = np.array([0.38288972, 0.38317543, 0.38373634,  0.38377333])  # Wyckoff z-position Gallium # 0.38716856   0.38448524
+    # dz = np.array([0.28512880E-03, 0.31877682E-03, 0.17599505E-03, 0.26537123E-03])           #0.59160584E-03
+    # V = a ** 2 * c  # Volume in angstrom^3 cell parameter
+    # # print("V_euga2al2 = {}".format(V))
+    # dV = V * np.sqrt((2 * da / a) ** 2 + (dc / c) ** 2)
+    # #
+    # D12, D22, Theta = [],[],[]
+    # dD12, dD22, dTheta = [],[],[]
+    # """STAVINOAH STUFF"""
+    # for i in range(0,4):
+    #     D12.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[0])
+    #     dD12.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[1])
+    #     D22.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[2])
+    #     dD22.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[3])
+    #     Theta.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[4])
+    #     dTheta.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[5])
+    # stavinoah(z[0], dz[0], a=a[0], da=da[0], c=c[0], dc=dc[0], sample="100K")
+    # stavinoah(z[1], dz[1], a=a[1], da=da[1], c=c[1], dc=dc[1], sample="200K")
+    # stavinoah(z[2], dz[2], a=a[2], da=da[2], c=c[2], dc=dc[2], sample="250K")
+    # stavinoah(z[3], dz[3], a=a[3], da=da[3], c=c[3], dc=dc[3], sample="250K")
+    # print("EuGa4 Stavinoha parameters from 100K to 293K: d12={}+-{}, d22={}+-{}, theta={}+-{}".format(D12, dD12, D22, dD22, Theta, dTheta))
+
+    # ##############################
+    # # Temperature measurement Plot
+    # ##############################
+
+    # fig, ax1 = plt.subplots()
+    # fig.subplots_adjust(right=0.8)
+    # tkw = dict(size=4, width=1.5)
     #
-    D12, D22, Theta = [],[],[]
-    dD12, dD22, dTheta = [],[],[]
-    """STAVINOAH STUFF"""
-    for i in range(0,4):
-        D12.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[0])
-        dD12.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[1])
-        D22.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[2])
-        dD22.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[3])
-        Theta.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[4])
-        dTheta.append(stavinoah(z[i], dz[i], c=c[i], a=a[i], da=da[i], dc=dc[i], compound='EuGa2Al2', sample='1a [i]')[5])
-    stavinoah(z[0], dz[0], a=a[0], da=da[0], c=c[0], dc=dc[0], sample="100K")
-    stavinoah(z[1], dz[1], a=a[1], da=da[1], c=c[1], dc=dc[1], sample="200K")
-    stavinoah(z[2], dz[2], a=a[2], da=da[2], c=c[2], dc=dc[2], sample="250K")
-    stavinoah(z[3], dz[3], a=a[3], da=da[3], c=c[3], dc=dc[3], sample="250K")
-    print("EuGa4 Stavinoha parameters from 100K to 293K: d12={}+-{}, d22={}+-{}, theta={}+-{}".format(D12, dD12, D22, dD22, Theta, dTheta))
-
-    ##############################
-    # Temperature measurement Plot
-    ##############################
-    # a, c, z
-    fig, ax = plt.subplots()
-    fig.subplots_adjust(right=0.75)
-    twin1 = ax.twinx()
-    twin2 = ax.twinx()
-    # Offset the right spine of twin2.  The ticks and label have already been
-    # placed on the right by twinx above.
-    twin2.spines.right.set_position(("axes", 1.2))
-    p1, = ax.plot(T, z, "b-", marker='o', linestyle='--', lw='0.8', markersize='10'
-                       )
-    p2, = twin1.plot(T, a, "g-", marker='v', linestyle='--', lw='0.8', markersize='10'
-                         )
-    p3, = twin2.plot(T, c, "r-", marker='x', linestyle='--', lw='0.8', markersize='10'
-                         )
-    ax.yaxis.label.set_color(p1.get_color())
-    twin1.yaxis.label.set_color(p2.get_color())
-    twin2.yaxis.label.set_color(p3.get_color())
-
-    tkw = dict(size=4, width=1.5)
-    ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
-    twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
-    twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
-    ax.tick_params(axis='x', labelsize=12, direction='in', **tkw)
-    ax.set_ylabel(r'$z$', fontsize=13) #V(Å$^3$)
-    twin1.set_ylabel(r'a(Å)', fontsize=13)
-    twin2.set_ylabel(r'c(Å)', fontsize=13)
-    ax.set_xticks([100,200,250,293])
-    # ax.set_yticks([0.3850, 0.3853, 0.3856, 0.3859, 0.3862])
-    # linear fits for a,c,z
-    # lin_reg(T, z, dy=np.zeros(4), sigma_y=dz)
-    lin_reg(T, a, dy=np.zeros(4), sigma_y=da)
-    lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)
-    # print("EuGa2Al2 cell parameters at T=0K with linear fit with statistical uncertainties from \
-    # Crysalis and Fullprof: a={}, c={}, z={}".format(lin_reg(T, z, dy=np.zeros(4), sigma_y=dz)[3], lin_reg(T, a, dy=np.zeros(4), sigma_y=da)[3],
-           #                                          lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)[3]))
-    ax.set_xlabel(r'T(K)', fontsize=12)
-    plt.savefig("stavinoah1_euga4", dpi=300)
-
-    fig, ax = plt.subplots()
-    fig.subplots_adjust(right=0.75)
-    twin1 = ax.twinx()
-    twin2 = ax.twinx()
-    # Offset the right spine of twin2.  The ticks and label have already been
-    # placed on the right by twinx above.
-    twin2.spines.right.set_position(("axes", 1.2))
-    # print("Theta={}".format(Theta))
-    p1, = ax.plot(T, D12, "b-", marker='o', linestyle='--', lw='0.8', markersize='10'
-                  )
-    p2, = twin1.plot(T, D22, "g-", marker='v', linestyle='--', lw='0.8', markersize='10'
-                     )
-    p3, = twin2.plot(T, Theta, "r-", marker='x', linestyle='--', lw='0.8', markersize='10'
-                     )
-    ax.yaxis.label.set_color(p1.get_color())
-    twin1.yaxis.label.set_color(p2.get_color())
-    twin2.yaxis.label.set_color(p3.get_color())
-
-    tkw = dict(size=4, width=1.5)
-    ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
-    twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
-    twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
-    ax.tick_params(axis='x', labelsize=12, direction='in', **tkw)
-    ax.set_ylabel(r'd$_{12}$(Å)', fontsize=13)
-    twin1.set_ylabel(r'd$_{22}$(Å)', fontsize=13)
-    twin2.set_ylabel(r'$\theta$(°)', fontsize=13)
-    ax.set_xticks([100, 200, 250, 293])
-    ax.set_xlabel(r'T(K)', fontsize=12)
-
-    # # # ax.legend(handles=[p1, p2, p3])
-    # plt.savefig("stavinoah2_euga4", dpi=300)
-    plt.show()
-
-    # # Temp plots # 200K measurement yields less reflections,
-    # plt.errorbar(sinlambda293K, obs293K, yerr=sigma293K, ls='', marker='x', capsize=1.0, c='tab:brown', label='293K')
-    # plt.errorbar(sinlambda250K, obs250K, yerr=sigma250K, ls='', marker='x', capsize=1.0, c='tab:red', label='250K')
-    # plt.errorbar(sinlambda200K, obs200K, yerr=sigma200K, ls='', marker='x', capsize=1.0, c='tab:blue', label='200K')
-    # plt.errorbar(sinlambda150K, obs150K, yerr=sigma150K, ls='', marker='x', capsize=1.0, c='tab:green', label='150K')
-    # plt.errorbar(sinlambda100K, obs100K, yerr=sigma100K, ls='', marker='x', capsize=1.0, c='tab:orange', label='100K')
-    # plt.xlim(0.1, np.max(sinlambda200K)+0.025)
-    # plt.tick_params(axis='y', labelsize=12, direction='in')
-    # plt.tick_params(axis='x', labelsize=12, direction='in')
-    # plt.ylabel(r'Intensity (arb. units)', fontsize=13)
-    # plt.xlabel(r'$\frac{\sin(\theta)}{\lambda}$(Å$^{-1}$)', fontsize=13)
-    # plt.legend(fontsize=12)
-    # plt.savefig("euga4_temp_intensities", dpi=300)
+    # ax1.set_xlabel(r'T(K)', labelsize=30)
+    # ax1.set_ylabel(r'$a$(Å)', color='b', labelsize=30)
+    # ax1.errorbar(T, a, yerr=da, color='b', linestyle='--', lw=0.8, marker='o', markersize=10, capsize=4, label=r'$a$(Å)')
+    # ax1.tick_params(axis='y', labelcolor='b', labelsize=30)
+    # ax1.set_xticks([100, 200, 250, 293])
+    # ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    # ax1.legend(labelsize=30, loc='upper left')
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # ax2.errorbar(T, c, yerr=dc, color='g', linestyle='--', lw=0.8, marker='s', markersize=10, capsize=4, label=r'$c$(Å)')
+    # ax2.set_ylabel(r'$c$(Å)', color='g', labelsize=30)
+    # ax2.tick_params(axis='y', labelcolor='g', labelsize=30, **tkw)
+    # ax2.text(x=200, y=10.68, s=r'(a)', style='oblique', labelsize=30)
+    # ax2.text(x=100, y=10.67, s=r'EuGa$_4$', style='italic', fontsize=18, fontweight='bold')
+    # ax2.legend(labelsize=30, loc='lower right')
+    # plt.savefig("stavinoah1_euga4_1.jpg", dpi=300)
+    #
+    #
+    # fig, ax1 = plt.subplots()
+    # fig.subplots_adjust(right=0.8)
+    # tkw = dict(size=4, width=1.5)
+    #
+    # ax1.set_xlabel(r'T(K)', labelsize=30)
+    # ax1.set_ylabel(r'$d_{12}$(Å)', color='m', labelsize=30)
+    # ax1.errorbar(T, D12, yerr=dD12, color='m', linestyle='--', lw=0.8, marker='o', markersize=10, capsize=4, label=r'$d_{12}$(Å)')
+    # ax1.tick_params(axis='y', labelcolor='m', labelsize=30)
+    # ax1.set_xticks([100, 200, 250, 293])
+    # ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    # ax1.legend(labelsize=30, loc='upper left')
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # ax2.errorbar(T, D22, yerr=dD22, color='y', linestyle='--', lw=0.8, marker='s', markersize=10, capsize=4, label=r'$d_{22}$(Å)')
+    # ax2.set_ylabel(r'$d_{22}$(Å)', color='y', labelsize=30)
+    # ax2.tick_params(axis='y', labelcolor='y', labelsize=30, **tkw)
+    # ax2.text(x=250, y=2.4975, s=r'(b)', style='oblique', labelsize=30)
+    # ax2.legend(labelsize=30, loc='lower right')
+    # plt.savefig("stavinoah1_euga4_2.jpg", dpi=300)
+    #
+    # fig, ax1 = plt.subplots()
+    # fig.subplots_adjust(right=0.8)
+    # tkw = dict(size=4, width=1.5)
+    # ax1.set_xlabel(r'T(K)', labelsize=30)
+    # ax1.set_ylabel(r'$z$', color='r', labelsize=30)
+    # ax1.errorbar(T, z, yerr=dz, color='r', linestyle='--', lw=0.8, marker='o', markersize=10, capsize=4, label=r'$z$')
+    # ax1.tick_params(axis='y', labelcolor='r', labelsize=30)
+    # ax1.set_xticks([100, 200, 250, 293])
+    # ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    # ax1.legend(labelsize=30, loc='upper center')
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # ax2.errorbar(T, Theta, yerr=dTheta, color='c', linestyle='--', lw=0.8, marker='s', markersize=10, capsize=4, label=r'$\theta$(°)')
+    # ax2.set_ylabel(r'$\theta$(°)', color='c', labelsize=30)
+    # ax2.tick_params(axis='y', labelcolor='c', labelsize=30, **tkw)
+    # ax2.text(x=130, y=114.27, s=r'(c)', style='oblique', labelsize=30)
+    # ax2.legend(labelsize=30, loc='lower center')
+    # plt.savefig("stavinoah1_euga4_3.jpg", dpi=300)
     # plt.show()
+
+    ax1.set_xlabel(r'T(K)', fontsize=30)
+    ax1.set_ylabel(r'$a$(Å)', color='b', fontsize=30)
+    ax1.errorbar(T, a, yerr=da, color='b', linestyle='', lw=0.8, marker='o', markersize=12, capsize=4, label=r'$a$')
+    m, sigma_m , dm, t, sigma_t, dt = lin_reg(T, a, dy=np.zeros(4), sigma_y=da, plot=False)
+    ax1.plot(np.linspace(80, 310, 1000), m*np.linspace(80, 310, 1000) + t, lw=1.5, c='b', ls='-')
+    print("a: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    ax1.tick_params(axis='y', labelcolor='b', labelsize=30)
+    # ax1.set_xticks([100, 180, 200, 293])
+    ax1.locator_params(axis='y', nbins=3)
+    ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    ax1.legend(fontsize=27, loc='upper left')
+    # Adding Twin Axes
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('Temperature', color='g')
+    m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, c, dy=np.zeros(4), sigma_y=dc, plot=False)
+    ax2.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='g', ls='-')
+    print("c: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    ax2.errorbar(T, c, yerr=dc, color='g', linestyle='', lw=0.8, marker='s', markersize=12, capsize=4, label=r'$c$')
+    ax2.set_ylabel(r'$c$(Å)', color='g', fontsize=30)
+    ax2.tick_params(axis='y', labelcolor='g', labelsize=30, **tkw)
+    ax2.text(x=210, y=10.965, s=r'(a)', style='oblique', fontsize=27)
+    ax2.text(x=80, y=10.950, s=r'EuGa$_2$Al$_2$', style='italic', fontsize=30, fontweight='bold')
+    ax2.legend(fontsize=27, loc='lower right')
+    plt.tight_layout()
+    plt.savefig("stavinoah1_euga2al2_1.jpg", dpi=300)
+
+    fig, ax1 = plt.subplots()
+    fig.subplots_adjust(right=0.75)
+    tkw = dict(size=4, width=1.5)
+    ax1.set_xlabel(r'T(K)', fontsize=30)
+    ax1.set_ylabel(r'$d_{12}$(Å)', color='m', fontsize=30)
+    m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, D12, dy=np.zeros(4), sigma_y=dD12, plot=False)
+    ax1.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='m', ls='-')
+    print("d12: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    ax1.errorbar(T, D12, yerr=dD12, color='m', linestyle='', lw=0.8, marker='o', markersize=12, capsize=4, label=r'$d_{12}$')
+    ax1.tick_params(axis='y', labelcolor='m', labelsize=30)
+    # ax1.set_xticks([100, 150, 200, 293])
+    ax1.locator_params(axis='y', nbins=3)
+    ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    ax1.legend(fontsize=27, loc='upper left')
+    # Adding Twin Axes
+    ax2 = ax1.twinx()
+    # ax2.set_ylabel('Temperat', color='g')
+    m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, D22, dy=np.zeros(4), sigma_y=dD22, plot=False)
+    ax2.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='y', ls='-')
+    print("d22: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    ax2.errorbar(T, D22, yerr=dD22, color='y', linestyle='', lw=0.8, marker='s', markersize=12, capsize=4, label=r'$d_{22}$')
+    ax2.set_ylabel(r'$d_{22}$(Å)', color='y', fontsize=30)
+    ax2.tick_params(axis='y', labelcolor='y', labelsize=30, **tkw)
+    ax2.locator_params(axis='y', nbins=3)
+    ax2.text(x=220, y=2.536, s=r'(b)', style='oblique', fontsize=27)
+    ax2.legend(fontsize=27, loc='lower right')
+    plt.tight_layout()
+    plt.savefig("stavinoah1_euga2al2_2.jpg", dpi=300)
+
+    fig, ax1 = plt.subplots()
+    fig.subplots_adjust(right=0.75)
+    tkw = dict(size=4, width=1.5)
+    ax1.set_xlabel(r'T(K)', fontsize=30)
+    ax1.set_ylabel(r'$z$', color='r', fontsize=30)
+    m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, z, dy=np.zeros(4), sigma_y=dz, plot=False)
+    ax1.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='r', ls='-')
+    print("z: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    ax1.errorbar(T, z, yerr=dz, color='r', linestyle='', lw=0.8, marker='o', markersize=12, capsize=4, label=r'$z$')
+    ax1.tick_params(axis='y', labelcolor='r', labelsize=30)
+    # ax1.set_xticks([100, 180, 200, 293])
+    ax1.tick_params(axis='x', labelsize=30, direction='in', **tkw)
+    ax1.locator_params(axis='y', nbins=3)
+    ax1.legend(fontsize=27, loc='upper center')
+    # Adding Twin Axes
+    ax2 = ax1.twinx()
+    # ax2.set_ylabel('Temperat', color='g')
+    m, sigma_m, dm, t, sigma_t, dt = lin_reg(T, Theta, dy=np.zeros(4), sigma_y=dTheta, plot=False)
+    ax2.plot(np.linspace(80, 310, 1000), m * np.linspace(80, 310, 1000) + t, lw=1.5, c='c', ls='-')
+    print("a: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+    ax2.errorbar(T, Theta, yerr=dTheta, color='c', linestyle='', lw=0.8, marker='s', markersize=12, capsize=4, label=r'$\theta$')
+    ax2.set_ylabel(r'$\theta$(°)', color='c', fontsize=30)
+    ax2.tick_params(axis='y', labelcolor='c', labelsize=30, **tkw)
+    ax2.text(x=255, y=111.625, s=r'(c)', style='oblique', fontsize=27)
+    ax2.locator_params(axis='y', nbins=3)
+    ax2.legend(fontsize=27, loc='lower center')
+    plt.tight_layout()
+    plt.savefig("stavinoah1_euga2al2_3.jpg", dpi=300)
+    plt.show()
 
     # """CDW"""
     # # # mixed data points from Nakamura et. al: Q || [100] [110] [001]
@@ -449,3 +530,225 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+    # """OLD"""
+    # # Temperature measurement Plot
+    # # a, c, z
+    # fig, ax = plt.subplots()
+    # fig.subplots_adjust(right=0.75)
+    # twin1 = ax.twinx()
+    # twin2 = ax.twinx()
+    # # Offset the right spine of twin2.  The ticks and label have already been
+    # # placed on the right by twinx above.
+    # twin2.spines.right.set_position(("axes", 1.2))
+    # p1, = ax.plot(T, z, "b-", marker='o', linestyle='--', lw='0.8'
+    #                    )
+    # p2, = twin1.plot(T, a, "g-", marker='o', linestyle='--', lw='0.8'
+    #                      )
+    # p3, = twin2.plot(T, c, "r-", marker='o', linestyle='--', lw='0.8'
+    #                      )
+    # ax.yaxis.label.set_color(p1.get_color())
+    # twin1.yaxis.label.set_color(p2.get_color())
+    # twin2.yaxis.label.set_color(p3.get_color())
+    #
+    # tkw = dict(size=4, width=1.5)
+    # ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
+    # twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
+    # twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
+    # ax.tick_params(axis='x', labelsize=12, direction='in', **tkw)
+    # ax.set_ylabel(r'$z$', fontsize=13) #V(Å$^3$)
+    # twin1.set_ylabel(r'$a(Å)$', fontsize=13)
+    # twin2.set_ylabel(r'$c(Å)$', fontsize=13)
+    # ax.set_xticks([100,150,200,250,293])
+    # ax.set_yticks([0.3850, 0.3853, 0.3856, 0.3859, 0.3862])
+    # # linear fits for a,c,z
+    # # lin_reg(T, z, dy=np.zeros(4), sigma_y=dz, plot=True)
+    # lin_reg(T, a, dy=np.zeros(4), sigma_y=da)
+    # lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)
+    # # print("EuGa2Al2 cell parameters at T=0K with linear fit with statistical uncertainties from \
+    # # Crysalis and Fullprof: a={}, c={}, z={}".format(lin_reg(T, z, dy=np.zeros(4), sigma_y=dz)[3], lin_reg(T, a, dy=np.zeros(4), sigma_y=da)[3],
+    #        #                                          lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)[3]))
+    # ax.set_xlabel(r'T(K)', fontsize=12)
+    # plt.savefig("stavinoah1_euga2al2", dpi=300)
+
+    #"""d12, d22, theta"""
+    # fig, ax = plt.subplots()
+    # fig.subplots_adjust(right=0.75)
+    # twin1 = ax.twinx()
+    # twin2 = ax.twinx()
+    # # Offset the right spine of twin2.  The ticks and label have already been
+    # # placed on the right by twinx above.
+    # twin2.spines.right.set_position(("axes", 1.2))
+    # # print("Theta={}".format(Theta))
+    # p1, = ax.plot(T, D12, "b-", marker='o', linestyle='--', lw='0.8'
+    #                    )
+    # p2, = twin1.plot(T, D22, "g-", marker='o', linestyle='--', lw='0.8'
+    #                      )
+    # p3, = twin2.plot(T, Theta, "r-", marker='o', linestyle='--', lw='0.8'
+    #                      )
+    # ax.yaxis.label.set_color(p1.get_color())
+    # twin1.yaxis.label.set_color(p2.get_color())
+    # twin2.yaxis.label.set_color(p3.get_color())
+    #
+    # tkw = dict(size=4, width=1.5)
+    # ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
+    # twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
+    # twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
+    # ax.tick_params(axis='x',labelsize=12, direction='in', **tkw)
+    # ax.set_ylabel(r'd$_{12}$(Å)', fontsize=13)
+    # twin1.set_ylabel(r'd$_{22}$(Å)', fontsize=13)
+    # twin2.set_ylabel(r'$\theta$(°)', fontsize=13)
+    # ax.set_xticks([100, 150, 200, 250, 293])
+    # ax.set_xlabel(r'T(K)', fontsize=12)
+    #
+    # # # # ax.legend(handles=[p1, p2, p3])
+    # plt.savefig("stavinoah2_euga2al2", dpi=300)
+    # plt.show()
+
+    # """OLD"""
+    # fig, ax1 = plt.subplots()
+    # # fig.subplots_adjust(right=0.75)
+    # tkw = dict(size=4, width=1.5)
+    #
+    # ax1.set_xlabel(r'Temperature', fontsize=15)
+    # ax1.set_ylabel(r'$a$(Å)', color='b', fontsize=15)
+    # ax1.errorbar(T, a, yerr=da, color='b', linestyle='--', lw=0.8, marker='o', markersize=8, capsize=4)
+    # ax1.tick_params(axis='y', labelcolor='b', labelsize=25)
+    # ax1.set_xticks([100, 200, 250, 293])
+    # ax1.tick_params(axis='x', labelsize=25, direction='in', **tkw)
+    #
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # ax2.errorbar(T, c, yerr=dc, color='g', linestyle='--', lw=0.8, marker='s', markersize=8, capsize=4)
+    # ax2.set_ylabel(r'$c$(Å)', color='g', fontsize=15)
+    # ax2.tick_params(axis='y', labelcolor='g', labelsize=25, **tkw)
+    # plt.savefig("stavinoah1_euga4_1", dpi=300)
+    #
+    #
+    # fig, ax1 = plt.subplots()
+    # # fig.subplots_adjust(right=0.75)
+    # tkw = dict(size=4, width=1.5)
+    #
+    # ax1.set_xlabel(r'Temperature', fontsize=15)
+    # ax1.set_ylabel(r'$d_{12}$(Å)', color='m', fontsize=15)
+    # ax1.errorbar(T, D12, yerr=dD12, color='m', linestyle='--', lw=0.8, marker='o', markersize=8, capsize=4)
+    # ax1.tick_params(axis='y', labelcolor='m', labelsize=25)
+    # ax1.set_xticks([100, 200, 250, 293])
+    # ax1.tick_params(axis='x', labelsize=25, direction='in', **tkw)
+    #
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # ax2.errorbar(T, D22, yerr=dD22, color='y', linestyle='--', lw=0.8, marker='s', markersize=8, capsize=4)
+    # ax2.set_ylabel(r'$d_{22}$(Å)', color='y', fontsize=15)
+    # ax2.tick_params(axis='y', labelcolor='y', labelsize=25, **tkw)
+    # plt.savefig("stavinoah1_euga4_2", dpi=300)
+    #
+    # fig, ax1 = plt.subplots()
+    # # fig.subplots_adjust(right=0.75)
+    # tkw = dict(size=4, width=1.5)
+    #
+    # ax1.set_xlabel(r'Temperature', fontsize=15)
+    # ax1.set_ylabel(r'$z$', color='r', fontsize=15)
+    # ax1.errorbar(T, z, yerr=dz, color='r', linestyle='--', lw=0.8, marker='o', markersize=8, capsize=4)
+    # ax1.tick_params(axis='y', labelcolor='r', labelsize=25)
+    # ax1.set_xticks([100, 200, 250, 293])
+    # ax1.tick_params(axis='x', labelsize=25, direction='in', **tkw)
+    #
+    # # Adding Twin Axes
+    # ax2 = ax1.twinx()
+    # # ax2.set_ylabel('Temperat', color='g')
+    # ax2.errorbar(T, Theta, yerr=dTheta, color='c', linestyle='--', lw=0.8, marker='s', markersize=8, capsize=4)
+    # ax2.set_ylabel(r'$\theta$(°)', color='c', fontsize=15)
+    # ax2.tick_params(axis='y', labelcolor='c', labelsize=15, **tkw)
+    # plt.show()
+    # plt.savefig("stavinoah1_euga4_3", dpi=300)
+
+
+
+    # a, c, z
+    # fig, ax = plt.subplots()
+    # fig.subplots_adjust(right=0.75)
+    # twin1 = ax.twinx()
+    # twin2 = ax.twinx()
+    # # Offset the right spine of twin2.  The ticks and label have already been
+    # # placed on the right by twinx above.
+    # twin2.spines.right.set_position(("axes", 1.2))
+    # p1 = ax.errorbar(x=T, y=z, yerr=dz, fmt='b-', marker='o', linestyle='--', lw='0.8', markersize='10'
+    #                    )
+    # p2, = twin1.plot(T, a, "g-", marker='v', linestyle='--', lw='0.8', markersize='10'
+    #                      )
+    # p3, = twin2.plot(T, c, "r-", marker='x', linestyle='--', lw='0.8', markersize='10'
+    #                      )
+    # # ax.yaxis.label.set_color(p1.get_children()[0].get_color)
+    # twin1.yaxis.label.set_color(p2.get_color())
+    # twin2.yaxis.label.set_color(p3.get_color())
+    #
+    # tkw = dict(size=4, width=1.5)
+    # ax.tick_params(axis="y", colors='g', labelsize=12, direction='in', **tkw)
+    # twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
+    # twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
+    # ax.tick_params(axis='x', labelsize=12, direction='in', **tkw)
+    # ax.set_ylabel(r'$z$', fontsize=13) #V(Å$^3$)
+    # twin1.set_ylabel(r'a(Å)', fontsize=13)
+    # twin2.set_ylabel(r'c(Å)', fontsize=13)
+    # ax.set_xticks([100,200,250,293])
+    # # ax.set_yticks([0.3850, 0.3853, 0.3856, 0.3859, 0.3862])
+    # # linear fits for a,c,z
+    # # lin_reg(T, z, dy=np.zeros(4), sigma_y=dz)
+    # lin_reg(T, a, dy=np.zeros(4), sigma_y=da)
+    # lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)
+    # # print("EuGa2Al2 cell parameters at T=0K with linear fit with statistical uncertainties from \
+    # # Crysalis and Fullprof: a={}, c={}, z={}".format(lin_reg(T, z, dy=np.zeros(4), sigma_y=dz)[3], lin_reg(T, a, dy=np.zeros(4), sigma_y=da)[3],
+    #        #                                          lin_reg(T, c, dy=np.zeros(4), sigma_y=dc)[3]))
+    # ax.set_xlabel(r'T(K)', fontsize=12)
+    # plt.show()
+    # plt.savefig("stavinoah1_euga4", dpi=300)
+
+    # fig, ax = plt.subplots()
+    # fig.subplots_adjust(right=0.75)
+    # twin1 = ax.twinx()
+    # twin2 = ax.twinx()
+    # # Offset the right spine of twin2.  The ticks and label have already been
+    # # placed on the right by twinx above.
+    # twin2.spines.right.set_position(("axes", 1.2))
+    # # print("Theta={}".format(Theta))
+    # p1, = ax.plot(T, D12, "b-", marker='o', linestyle='--', lw='0.8', markersize='10'
+    #               )
+    # p2, = twin1.plot(T, D22, "g-", marker='v', linestyle='--', lw='0.8', markersize='10'
+    #                  )
+    # p3, = twin2.plot(T, Theta, "r-", marker='x', linestyle='--', lw='0.8', markersize='10'
+    #                  )
+    # ax.yaxis.label.set_color(p1.get_color())
+    # twin1.yaxis.label.set_color(p2.get_color())
+    # twin2.yaxis.label.set_color(p3.get_color())
+    #
+    # tkw = dict(size=4, width=1.5)
+    # ax.tick_params(axis="y", colors=p1.get_color(), labelsize=12, direction='in', **tkw)
+    # twin1.tick_params(axis="y", colors=p2.get_color(), labelsize=12, direction='in', **tkw)
+    # twin2.tick_params(axis="y", colors=p3.get_color(), labelsize=12, direction='in', **tkw)
+    # ax.tick_params(axis='x', labelsize=12, direction='in', **tkw)
+    # ax.set_ylabel(r'd$_{12}$(Å)', fontsize=13)
+    # twin1.set_ylabel(r'd$_{22}$(Å)', fontsize=13)
+    # twin2.set_ylabel(r'$\theta$(°)', fontsize=13)
+    # ax.set_xticks([100, 200, 250, 293])
+    # ax.set_xlabel(r'T(K)', fontsize=12)
+
+    # # # ax.legend(handles=[p1, p2, p3])
+    # plt.savefig("stavinoah2_euga4", dpi=300)
+
+    # # Temp plots # 200K measurement yields less reflections,
+    # plt.errorbar(sinlambda293K, obs293K, yerr=sigma293K, ls='', marker='x', capsize=1.0, c='tab:brown', label='293K')
+    # plt.errorbar(sinlambda250K, obs250K, yerr=sigma250K, ls='', marker='x', capsize=1.0, c='tab:red', label='250K')
+    # plt.errorbar(sinlambda200K, obs200K, yerr=sigma200K, ls='', marker='x', capsize=1.0, c='tab:blue', label='200K')
+    # plt.errorbar(sinlambda150K, obs150K, yerr=sigma150K, ls='', marker='x', capsize=1.0, c='tab:green', label='150K')
+    # plt.errorbar(sinlambda100K, obs100K, yerr=sigma100K, ls='', marker='x', capsize=1.0, c='tab:orange', label='100K')
+    # plt.xlim(0.1, np.max(sinlambda200K)+0.025)
+    # plt.tick_params(axis='y', labelsize=12, direction='in')
+    # plt.tick_params(axis='x', labelsize=12, direction='in')
+    # plt.ylabel(r'Intensity (arb. units)', fontsize=13)
+    # plt.xlabel(r'$\frac{\sin(\theta)}{\lambda}$(Å$^{-1}$)', fontsize=13)
+    # plt.legend(fontsize=12)
+    # plt.savefig("euga4_temp_intensities", dpi=300)
+    # plt.show()
