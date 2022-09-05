@@ -26,7 +26,7 @@ def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
     """
     # # imshow
     # color = 'binary'
-    fig = plt.figure(figsize = (5,5))
+    fig = plt.figure(figsize=(6,7))
     # #fig.suptitle('XRD of EuGa2Al2')
     # ax = fig.add_subplot(1, 2, 1)
     # im = ax.imshow(I, cmap=color, vmin=abs(I).min(), vmax=abs(I).max(),
@@ -56,12 +56,14 @@ def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
 
     # 2d scatter plot
     ax = fig.add_subplot(1, 1, 1)
+    ax.set_xlim(-boundary + 10, boundary - 10)
+    ax.set_ylim(-boundary, boundary)
     ax.scatter(k2d, l2d, s=scatterfactor * I, linewidth=1.0, c='k')
     #ax.set_yticks(np.arange(-boundary+2, boundary, 2))
     #ax.set_xticks(np.arange(-boundary+2, boundary, 2))
-    ax.set_xlabel(r'K (r.l.u.)', fontsize=15)
-    ax.set_ylabel(r'L (r.l.u.)', fontsize=15)
-    plt.tick_params(axis='x', labelsize=15, direction='in')
+    ax.set_xlabel(r'K (r.l.u.)', fontsize=20)
+    ax.set_ylabel(r'L (r.l.u.)', fontsize=20)
+    plt.tick_params(axis='x', labelsize=17, direction='in')
     plt.tick_params(axis='y', labelsize=15, direction='in')
 
     # 3d surface plot
@@ -80,10 +82,10 @@ def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
 
 def main():
     print(__doc__)
-    boundary = 5
-    h = -1
+    boundary = 16
+    h = 1
     n, k2d, l2d, h = kspacecreator(boundary, h)
-    scatterfactor = 0.0003
+    scatterfactor = 0.00005
     # Strcture parameters
     a = 4.40696  # in angstrom
     c = 10.68626  # in angstrom
@@ -128,12 +130,12 @@ def main():
 
     # ########################################################################
     # """ Debye-Waller factor"""
-    lamb = 1 # Wellenlänge
+    lamb = 0.0000000001 # Wellenlänge
     # Compute all distances corresponding to lattice diffractions with hkl
     d_hkl = a/(np.sqrt( (h * np.ones((n, n))) **2 + k2d**2 + (a/c)**2 * l2d**2))
     # 1. compute all angles corresponding to the k points according to braggs law
     theta = np.arcsin(lamb/(2 * d_hkl))
-    B_iso_Eu, B_iso_Ga = 1,2 # isotropic movements around equilibrium, inverse proportional to the mass of the atom
+    B_iso_Eu, B_iso_Ga = 0, 0 # isotropic movements around equilibrium, inverse proportional to the mass of the atom
     B_iso_list = [B_iso_Eu, B_iso_Ga]
     # ########################################################################
     

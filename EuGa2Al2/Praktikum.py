@@ -141,7 +141,6 @@ def lin_reg(x, y, dy, sigma_y, Titel=None, dx=None, sigma_x=None, plot=False, p=
     Bei Bedarf könnte noch bounds mit angegeben werden
     -------------------------------------------------
     """
-    
     # Bounds 
     # b = [[],[]]
     # Berechne Fit-Daten für zentralen Fit und Fehlerschläuche
@@ -150,7 +149,6 @@ def lin_reg(x, y, dy, sigma_y, Titel=None, dx=None, sigma_x=None, plot=False, p=
     par2, cov2 = fit(lin_fit, x, y, absolute_sigma=True, sigma=sigma_y, 
                      p0=p) # Zentral
     par3, cov3 = fit(lin_fit, x, y - dy, absolute_sigma=True, sigma=sigma_y) # Unten
-
     
     # Ausgleichsgeraden
     # Steigungen
@@ -192,7 +190,7 @@ def lin_reg(x, y, dy, sigma_y, Titel=None, dx=None, sigma_x=None, plot=False, p=
         #           ls='', capsize=7, label='combined MU', lw=2)
 
         # Plot der linearen Fits
-        plt.plot(np.linspace(0.2,5, 200), lin_fit(np.linspace(0.2,5, 200), *par2), c='tab:red', label=r'$\mathbf{Q} || [100], [110], [001]$')  # main fit
+        # plt.plot(np.linspace(0.2,5, 200), lin_fit(np.linspace(0.2,5, 200), *par2), c='tab:red', label=r'$\mathbf{Q} || [100], [110], [001]$')  # main fit
         # plt.plot(x, lin_fit(x, *par1), c='tab:green', ls = '--',
         # label='error tubes', lw=2.5) # upper fit
         # plt.plot(x, lin_fit(x, *par3), c='tab:green', ls = '--', lw=2.5) # lower fit

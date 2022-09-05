@@ -227,10 +227,11 @@ def main():
     dz, weird = [], []
     for i in range(1, 41):
         z.append((i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)
-        # Modulation 1: (-1)**i * z_ampl * np.sin(2*np.pi* q_cdw * (i/4 + 1/8 + 1/8 * (-1)**(i+1))
-        dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw * (i/4 + 1/8 + 1/8 * (-1)**(i+1)))))
+        # Modulation 1: (-1)**i * z_ampl * np.sin(2*np.pi* q_cdw * z)
+        # Modulation 2: fourier series with q_cdw=0.10
+        dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
         weird.append((i/4 + 1/8 + 1/8 * (-1)**(i+1)))
-    print("input for sin from marein: {}".format(weird))
+    # print("input for sin from marein: {}".format(weird))
     print("Gallium z-positions and deviations dz:")
     print("z={}".format(np.round(z, 2)), "# z={}".format(len(z)),
           "dz={}".format(np.round(dz, 2)), "# dz={}".format(len(dz)),
@@ -344,16 +345,17 @@ def main():
     axs[1].set_ylim(k0 - k_boundary, k0 + k_boundary)
     axs[1].set_xlim(l0 - l_boundary, l0 + l_boundary)
     axs[1].scatter(l2d[:, readout], k2d[:, readout], s=I[:, readout]*scatterfactor, linewidth=0.05, c='k',
-                   label='[{}KL]'.format(h))
+                   label='[{}{}L]'.format(h, k0))
     axs[1].legend(fontsize=15)
     # print("single peak: k={}, l={}".format(k2d[:, readout], l2d[:, readout]))
     # Projected intensity of desired [HKL]-peak
-    axs[2].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=5)
+    axs[2].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=5, label='[{}{}L]'.format(h, k0))
     axs[2].set_xlim(l0 - l_boundary, l0 + l_boundary)
     axs[2].set_xlabel(r"L (r.l.u.)", fontsize=15)
     axs[2].set_ylabel(r"Intensity (Rel.)", fontsize=15)
     axs[2].tick_params(axis='x', labelsize=15, direction='in')
     axs[2].tick_params(axis='y', labelsize=15, direction='in')
+    axs[2].legend(fontsize=15)
     print("I_max = {}".format(np.sort(I[:, readout])[-1]))
     print("(I_max - I_[max-1])/I_max = {}".format((np.sort(I[:, readout])[-1] - np.sort(I[:, readout])[-2]) / np.sort(I[:, readout])[-1]))
     # # 3d surface and scatter plot
