@@ -115,7 +115,7 @@ def plotallthisshit(k2d, l2d, I, h, scatterfactor):
 
 def main():
     print(__doc__)
-    l_boundary, k_boundary = 1, 1
+    l_boundary, k_boundary = 2, 2
     h = -3
     # n, k2d, l2d, h = kspacecreator(boundary, h) # for normal plot
     ############################################ # For CDW Plot
@@ -218,7 +218,7 @@ def main():
     # plt.scatter(z_Ga1_T, np.ones(11) * 0.5, c='g', marker='.')
     # plt.scatter(z_Ga2_T, np.ones(11) * 0.5, c='b', marker='.')
     # #################################################################
-    z_ampl = -0.12 # -0.08
+    z_ampl = np.array([-0.12, -0.01, -0.01, -0.01, -0.01, -0.01]) # -0.08
     q_cdw = 1/10  # in r.l.u.
     print("CDW Modulation A*sin(q_cdw*z*2*pi):")
     print("q_cdw={}, A={}".format(q_cdw, z_ampl))
@@ -228,9 +228,23 @@ def main():
     for i in range(1, 41):
         z.append((i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)
         # Modulation 1: (-1)**i * z_ampl * np.sin(2*np.pi* q_cdw * z)
+        #dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
+        # weird.append((i/4 + 1/8 + 1/8 * (-1)**(i+1)))
+
         # Modulation 2: fourier series with q_cdw=0.10
-        dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
-        weird.append((i/4 + 1/8 + 1/8 * (-1)**(i+1)))
+        dz.append((-1)**i * z_ampl[0] * ( np.cos(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+                  (-1)**i * z_ampl[1] * ( np.cos(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+                  (-1)**i * z_ampl[2] * ( np.cos(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+                  (-1) ** i * z_ampl[3] * (np.cos(4*
+            2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(4*
+            2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
+                  (-1) ** i * z_ampl[4] * (np.cos(
+            5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
+            5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
+                  (-1) ** i * z_ampl[5] * (np.cos(
+            6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
+            6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i))
+                  )
     # print("input for sin from marein: {}".format(weird))
     print("Gallium z-positions and deviations dz:")
     print("z={}".format(np.round(z, 2)), "# z={}".format(len(z)),
@@ -238,11 +252,11 @@ def main():
           "z+dz={}".format(np.asarray(z) + np.asarray(dz))
           )
     mod = np.asarray(z) + np.asarray(dz) # modulated ga_z positions
-    fig, axs = plt.subplots(4, figsize=(12,7))
+    fig, axs = plt.subplots(2, 2, figsize=(10,5))
 
     # fig.suptitle(r'CDW modulation simulation for $EuGa_2Al_2$')
-    axs[0].scatter(np.asarray(z) + np.asarray(dz), np.ones(40) * 0.5, c='r', marker='.', label='Modulated')
-    axs[0].scatter(np.asarray(z), np.ones(40) * 0.5, c='k', marker='.', label='Unmodulated')
+    axs[0, 0].scatter(np.asarray(z) + np.asarray(dz), np.ones(40) * 0.5, c='r', marker='.', label='Modulated')
+    axs[0, 0].scatter(np.asarray(z), np.ones(40) * 0.5, c='k', marker='.', label='Unmodulated')
 
     # plt.scatter(z_Ga1_T_mod, np.ones(10) * 0.5, c='r', marker='.')
     # plt.scatter(z_Ga2_mod, np.ones(10) * 0.5, c='k', marker='.', label='Wyckoff 4e(2)')
@@ -251,14 +265,14 @@ def main():
     every_1st, every_2nd, every_3rd, every_4th = mod[0::4], mod[1::4], mod[2::4], mod[3::4] # transform 40 array into 4*10 arrays
     #print("every_1st={}".format(every_1st), "every_2nd={}".format(every_2nd), "every_3rd={}".format(every_3rd),
     #      "every_4th={}".format(every_4th))
-    axs[0].set_xlim(0, 10)
-    axs[0].set_ylim(0.48, 0.52)
-    axs[0].legend(fontsize=15)
-    axs[0].set_xticks(np.arange(0, 11, 1))
-    axs[0].tick_params(axis='x', labelsize=15, direction='in')
-    axs[0].tick_params(direction='in')
-    axs[0].set_yticks([])
-    axs[0].set_xlabel(r"$z$", fontsize=15)
+    axs[0, 0].set_xlim(0, 10)
+    axs[0, 0].set_ylim(0.48, 0.52)
+    axs[0, 0].legend(fontsize=15)
+    axs[0, 0].set_xticks(np.arange(0, 11, 1))
+    axs[0, 0].tick_params(axis='x', labelsize=15, direction='in')
+    axs[0, 0].tick_params(direction='in')
+    axs[0, 0].set_yticks([])
+    axs[0, 0].set_xlabel(r"$z$", fontsize=15)
     
     """ Final Atomic vector positions """
     Eu, Eu_T = np.array([x_Eu, y_Eu, z_Eu]), np.array([x_Eu_T, y_Eu_T, z_Eu_T])
@@ -329,33 +343,33 @@ def main():
     # 2d scatter plot
     # print("k2d={}, l2d={}".format(k2d, l2d))
     # plot whole space:
-    axs[3].scatter(k2d, l2d, s=I*scatterfactor, linewidth=0.05, c='k')
-    axs[3].set_ylabel(r"L (r.l.u.)", fontsize=15)
-    axs[3].set_xlabel(r"K (r.l.u.)", fontsize=15)
-    axs[3].tick_params(axis='x', labelsize=15, direction='in')
-    axs[3].tick_params(axis='y', labelsize=15, direction='in')
+    axs[1,0].scatter(k2d, l2d, s=I*scatterfactor, linewidth=0.05, c='k')
+    axs[1,0].set_ylabel(r"L (r.l.u.)", fontsize=15)
+    axs[1,0].set_xlabel(r"K (r.l.u.)", fontsize=15)
+    axs[1,0].tick_params(axis='x', labelsize=15, direction='in')
+    axs[1,0].tick_params(axis='y', labelsize=15, direction='in')
     readout = l_boundary * 10 # readout: l_k_boundary * 10, centers around desired [HKL] peak
     # print("I_min/I_max = {}".format(np.min(I)/np.max(I)))
     # Centered peak
-    axs[1].set_xlabel(r'L (r.l.u.)', fontsize=15)
-    axs[1].set_ylabel(r'K (r.l.u.)', fontsize=15)
-    axs[1].tick_params(axis='x', labelsize=15, direction='in')
-    axs[1].tick_params(axis='y', labelsize=15, direction='in')
-    # axs[1].set_xlim(k0-k_boundary-0.5, k0+k_boundary+0.5)
-    axs[1].set_ylim(k0 - k_boundary, k0 + k_boundary)
-    axs[1].set_xlim(l0 - l_boundary, l0 + l_boundary)
-    axs[1].scatter(l2d[:, readout], k2d[:, readout], s=I[:, readout]*scatterfactor, linewidth=0.05, c='k',
-                   label='[{}{}L]'.format(h, k0))
-    axs[1].legend(fontsize=15)
+    axs[0,1].set_xlabel(r'L (r.l.u.)', fontsize=15)
+    axs[0,1].set_ylabel(r'K (r.l.u.)', fontsize=15)
+    axs[0,1].tick_params(axis='x', labelsize=15, direction='in')
+    axs[0,1].tick_params(axis='y', labelsize=15, direction='in')
+    # axs[0,1].set_xlim(k0-k_boundary-0.5, k0+k_boundary+0.5)
+    axs[0,1].set_ylim(k0 - k_boundary, k0 + k_boundary)
+    axs[0,1].set_xlim(l0 - l_boundary, l0 + l_boundary)
+    axs[0,1].scatter(l2d[:, readout], k2d[:, readout], s=I[:, readout]*scatterfactor, linewidth=0.05, c='k',
+                   label='[{}KL]'.format(h))
+    axs[0,1].legend(fontsize=15)
     # print("single peak: k={}, l={}".format(k2d[:, readout], l2d[:, readout]))
     # Projected intensity of desired [HKL]-peak
-    axs[2].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=5, label='[{}{}L]'.format(h, k0))
-    axs[2].set_xlim(l0 - l_boundary, l0 + l_boundary)
-    axs[2].set_xlabel(r"L (r.l.u.)", fontsize=15)
-    axs[2].set_ylabel(r"Intensity (Rel.)", fontsize=15)
-    axs[2].tick_params(axis='x', labelsize=15, direction='in')
-    axs[2].tick_params(axis='y', labelsize=15, direction='in')
-    axs[2].legend(fontsize=15)
+    axs[1,1].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=3, label='[{}KL]'.format(h))
+    axs[1,1].set_xlim(l0 - l_boundary, l0 + l_boundary)
+    axs[1,1].set_xlabel(r"L (r.l.u.)", fontsize=15)
+    axs[1,1].set_ylabel(r"Intensity (Rel.)", fontsize=15)
+    axs[1,1].tick_params(axis='x', labelsize=15, direction='in')
+    axs[1,1].tick_params(axis='y', labelsize=15, direction='in')
+    axs[1,1].legend(fontsize=15)
     print("I_max = {}".format(np.sort(I[:, readout])[-1]))
     print("(I_max - I_[max-1])/I_max = {}".format((np.sort(I[:, readout])[-1] - np.sort(I[:, readout])[-2]) / np.sort(I[:, readout])[-1]))
     # # 3d surface and scatter plot
@@ -377,7 +391,11 @@ def main():
     #     #           )
     #     # plt.show()
     #################################################
-    # plt.savefig('CDW_sim_HK0L0={}{}{}'.format(h, k0, l0), dpi=300)
+    plt.subplots_adjust(
+                        wspace=0.2,
+                        hspace=0.4)
+    plt.savefig('CDW_sim_HK0L0_FOURIER={}{}{}'.format(h, k0, l0), dpi=300)
+
     plt.show()
 
 

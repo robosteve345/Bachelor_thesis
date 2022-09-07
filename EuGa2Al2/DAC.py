@@ -38,35 +38,34 @@ dp_exp = np.array([0, 0.01, 0.01, 0.05, 0.05, 0.1, 0.1])
 p_exp293 = np.array([0, 2.03, 3.30, 5.09])
 p_exp250 = np.array([2.00, 3.48, 4.99])
 p_exp2 = np.array([2.03, 5.09, 4.99]) # z-refinements that succeeded
-# fig, ax1 = plt.subplots()
-# fig.subplots_adjust(right=0.8)
-# tkw = dict(size=4, width=1.5)
-#
-# ax1.set_xlabel(r'p(GPa)', fontsize=20)
-# ax1.set_ylabel(r'T$_{\mathrm{CDW}}$(K)', color='k', fontsize=20)
-# ax1.plot(p_CDW, T_CDW, color='k', linestyle='', lw=0.8, marker='o', markersize=12, label=r'$\mathbf{Q}||$ [100] [110] [001]')
-# m, sigma_m , dm, t, sigma_t, dt = lin_reg(p_CDW, T_CDW, sigma_y=np.ones(11), dy=np.ones(11), plot=False)
-# ax1.plot(np.linspace(0, 6, 500), m*np.linspace(0, 6, 500) + t, lw=1.5, c='k', ls='-')
-# print("T_CDW linear fit parameters: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
-# ax1.tick_params(axis='y', labelcolor='k', labelsize=20)
-# # # ax1.set_xticks([100, 180, 200, 293])
-# ax1.locator_params(axis='y', nbins=4)
-# ax1.tick_params(axis='x', labelsize=20, direction='in', **tkw)
-# ax1.legend(fontsize=18 , loc='lower right'
-#            )
-# # Adding Twin Axes
-# ax2 = ax1.twinx()
-# ax2.errorbar(p_exp, T_exp, xerr=dp_exp, marker='x', markersize=12, capsize=6, ls='', label=r'Exp. points', c='b')
-# ax2.set_ylabel(r'T(K)', color='b', fontsize=20)
-# ax2.tick_params(axis='y', labelcolor='b', labelsize=20, **tkw)
-# ax2.annotate("", xy=(4.99, 250), xytext=(5.3, 150), fontsize=50,
-#   arrowprops=dict(arrowstyle="->"))
-# ax2.set_ylim(0, 320)
-# ax2.legend(fontsize=18, loc='center left'
-#                )
-# plt.tight_layout()
-# plt.savefig("CDW_DAC_comparison_linfit.png", dpi=300)
-# plt.show()
+fig, ax1 = plt.subplots()
+fig.subplots_adjust(right=0.8)
+tkw = dict(size=4, width=1.5)
+ax1.set_xlabel(r'p(GPa)', fontsize=20)
+ax1.set_ylabel(r'T$_{\mathrm{CDW}}$(K)', color='k', fontsize=20)
+ax1.plot(p_CDW, T_CDW, color='k', linestyle='', lw=0.8, marker='o', markersize=12, label=r'$\mathbf{J}$, $\mathbf{Q}$ $||$ [100] [110] [001]')
+m, sigma_m , dm, t, sigma_t, dt = lin_reg(p_CDW, T_CDW, sigma_y=np.ones(11), dy=np.ones(11), plot=False)
+ax1.plot(np.linspace(0, 6, 500), m*np.linspace(0, 6, 500) + t, lw=1.5, c='k', ls='-')
+print("T_CDW linear fit parameters: m={}+-{}, t={}+-{}".format(m, sigma_m, t, sigma_t))
+ax1.tick_params(axis='y', labelcolor='k', labelsize=20)
+# # ax1.set_xticks([100, 180, 200, 293])
+ax1.locator_params(axis='y', nbins=4)
+ax1.tick_params(axis='x', labelsize=20, direction='in', **tkw)
+ax1.legend(fontsize=18 , loc='lower right'
+           )
+# Adding Twin Axes
+ax2 = ax1.twinx()
+ax2.errorbar(p_exp, np.array([293, 293, 250, 293, 250, 293, 250]), xerr=dp_exp, marker='x', markersize=12, capsize=6, ls='', label=r'Exp. points', c='b')
+ax2.set_ylabel(r'T(K)', color='b', fontsize=20)
+ax2.tick_params(axis='y', labelcolor='b', labelsize=20, **tkw)
+ax2.annotate("", xy=(4.99, 250), xytext=(5.3, 150), fontsize=50,
+  arrowprops=dict(arrowstyle="->"))
+ax2.set_ylim(0, 320)
+ax2.legend(fontsize=18, loc='center left'
+               )
+plt.tight_layout()
+plt.savefig("CDW_DAC_comparison_linfit.jpg", dpi=500)
+plt.show()
 
 ######################################
 """DAC Pressure and Temperature data
