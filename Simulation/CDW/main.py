@@ -218,7 +218,8 @@ def main():
     # plt.scatter(z_Ga1_T, np.ones(11) * 0.5, c='g', marker='.')
     # plt.scatter(z_Ga2_T, np.ones(11) * 0.5, c='b', marker='.')
     # #################################################################
-    z_ampl = np.array([-0.12, -0.01, -0.01, -0.01, -0.01, -0.01]) # -0.08
+    z_ampl = -0.08
+    #np.array([-0.12, -0.01, -0.01, -0.01, -0.01, -0.01]) # -0.08
     q_cdw = 1/10  # in r.l.u.
     print("CDW Modulation A*sin(q_cdw*z*2*pi):")
     print("q_cdw={}, A={}".format(q_cdw, z_ampl))
@@ -228,23 +229,23 @@ def main():
     for i in range(1, 41):
         z.append((i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)
         # Modulation 1: (-1)**i * z_ampl * np.sin(2*np.pi* q_cdw * z)
-        #dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
+        dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
         # weird.append((i/4 + 1/8 + 1/8 * (-1)**(i+1)))
 
         # Modulation 2: fourier series with q_cdw=0.10
-        dz.append((-1)**i * z_ampl[0] * ( np.cos(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
-                  (-1)**i * z_ampl[1] * ( np.cos(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
-                  (-1)**i * z_ampl[2] * ( np.cos(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
-                  (-1) ** i * z_ampl[3] * (np.cos(4*
-            2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(4*
-            2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
-                  (-1) ** i * z_ampl[4] * (np.cos(
-            5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
-            5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
-                  (-1) ** i * z_ampl[5] * (np.cos(
-            6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
-            6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i))
-                  )
+        #dz.append((-1)**i * z_ampl[0] * ( np.cos(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+        #          (-1)**i * z_ampl[1] * ( np.cos(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+        #          (-1)**i * z_ampl[2] * ( np.cos(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+        #          (-1) ** i * z_ampl[3] * (np.cos(4*
+        #    2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(4*
+        #    2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
+        #          (-1) ** i * z_ampl[4] * (np.cos(
+        #    5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
+        #    5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
+        #          (-1) ** i * z_ampl[5] * (np.cos(
+        #    6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
+        #    6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i))
+        #          )
     # print("input for sin from marein: {}".format(weird))
     print("Gallium z-positions and deviations dz:")
     print("z={}".format(np.round(z, 2)), "# z={}".format(len(z)),
@@ -363,7 +364,7 @@ def main():
     axs[0,1].legend(fontsize=15)
     # print("single peak: k={}, l={}".format(k2d[:, readout], l2d[:, readout]))
     # Projected intensity of desired [HKL]-peak
-    axs[1,1].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=3, label='[{}KL]'.format(h))
+    axs[1,1].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=3, label='[{}5L]'.format(h))
     axs[1,1].set_xlim(l0 - l_boundary, l0 + l_boundary)
     axs[1,1].set_xlabel(r"L (r.l.u.)", fontsize=15)
     axs[1,1].set_ylabel(r"Intensity (Rel.)", fontsize=15)
@@ -394,7 +395,7 @@ def main():
     plt.subplots_adjust(
                         wspace=0.2,
                         hspace=0.4)
-    plt.savefig('CDW_sim_HK0L0_FOURIER={}{}{}'.format(h, k0, l0), dpi=300)
+    plt.savefig('CDW_sim_HK0L0_FOURIER={}{}{}'.format(h, k0, l0), dpi=800)
 
     plt.show()
 
