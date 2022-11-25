@@ -1,47 +1,93 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy
-from scipy.ndimage import gaussian_filter
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator
-from scipy import ndimage
+import scipy as sp
 from scipy import signal
+import matplotlib as mpl
 
-"""SC (BCC)"""
+"""
+First principle XRD intensity map calculation for BCC of Fe (ground state)
+Credit: Steven Gebel, Dresden 25.11.2022
+"""
 
-def kspacecreator(boundary, h):
+def gaussian2d(A, X, Y, s):
+ return A/s * np.exp(-(X**2 + Y**2)/(2*s))
+
+def kspacecreator(boundary, diff):
     """Create kspace with integer points evenly distributed with periodic boundaries in KL
-    :returns: n: integer, dimension of k-space
-              k2d, l2d: ndarrays that resemble K and L in k-space
     """
-    k = np.arange(-boundary, boundary + 1, 1)  # np.linspace(-boundary, boundary, n)
-    l = np.arange(-boundary, boundary + 1, 1)  # np.linspace(-boundary, boundary, n)
+    # BENCHMARKING: b=2, diff=0.5
+    n = np.intc(boundary / diff * 2 + 1)
+    print("n={}".format(n))
+    #k = np.arange(-boundary, boundary + 1, 1)
+    k = np.linspace(-boundary, boundary, n)
+    # l = np.arange(-boundary, boundary + 1, 1)
+    l = np.linspace(-boundary, boundary, n)
     k2d, l2d = np.meshgrid(k, l)
-    n = len(k)
-    h=h
-    return n, k2d, l2d, h
+    print("k2d[0][i]={}".format(k2d[0,:]))
+    print("l2d[i][0]={}".format(l2d[:,0]))
+    # print("k2d={}".format(k2d), "l2d={}".format(l2d))
+    return n, k2d, l2d
 
 
-def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
+def plotfunction(k2d, l2d, I, boundary, diff, A, s, levels):
     """Plot all this shit
     """
-    # imshow
-    color = 'binary_r'
-    fig = plt.figure(figsize = (5,5))
-    fig.suptitle('XRD pattern simulation')
-    ax = fig.add_subplot(1, 2, 1)
-    im = ax.imshow(I, cmap=color, vmin=abs(I).min(), vmax=abs(I).max(),
-                   extent=[-boundary, boundary, -boundary, boundary])
-    im.set_interpolation('gaussian')
+    cmap = "viridis"
+    fig = plt.figure(figsize = (10,10))
+    ax = fig.add_subplot(1, 1, 1)
+    fig.suptitle('XRD intensity map simulation')
+    # color = 'binary_r' # 'inferno', 'magma', 'viridis'
+    # ax.set_title('HKL-plot')
+    ax.set_xlabel('K (r.l.u.)')
+    ax.set_ylabel('L (r.l.u.)')
+
+    Kernel = gaussian2d(A, k2d, l2d, s)
+    print("Kernel dim: {}x{}".format(Kernel.shape[0], Kernel.shape[1]))
+
+    # im.set_interpolation('gaussian')
     # interpolation methods: 'nearest', 'bilinear', 'bicubic', 'spline16',
     #            'spline36', 'hanning', 'hamming', 'hermite', 'kaiser', 'quadric',
     #            'catrom', 'gaussian', 'bessel', 'mitchell', 'sinc', 'lanczos'
-    # HOW DOES IT CONVOLVE HOW DOES INTERPOLATION WORK???
-    cb = fig.colorbar(im, ax=ax, shrink=0.3, aspect=10)
-    # Set up a figure twice as tall as it is wide
-    ax.set_title('HKL-plot')
-    ax.set_xlabel('k')
-    ax.set_ylabel('l')
+    #################
+    #Before pattern
+    #ax.imshow(I, cmap=color, vmin=abs(I).min(), vmax=abs(I).max(),
+     #              extent=[-boundary, boundary, -boundary, boundary])
+    #plt.show()
+    #################
+    # Manually set F(Q) elements to zero, that are forbidden by crystal symmetry.
+    integers = np.arange(-boundary, boundary + 1, 1)
+    print("integers={}".format(integers))
+    indices = 1 / diff * np.arange(0, 2 * boundary + 1, 1) + 0
+    print("newindices={}".format(np.intc(indices)))
+    print("I_before={}".format(I))
+    for i in range(len(k2d)):
+        if i in np.intc(indices):
+            I[i, :] = I[i, :]
+        else:
+            I[i, :] = 0
+            for j in range(len(l2d)):
+                if j in np.intc(indices):
+                    I[:, j] = I[:, j]
+                else:
+                    I[:, j] = 0
+    print("I_after={}".format(I))
+    print("I dim: {}x{}".format(I.shape[0], I.shape[1]))
+    #################
+    #After pattern
+    #Convolution
+    # conv = sp.signal.convolve2d(I, Kernel, mode='same')
+    # print("conv={}".format(conv))
+    # print("Conv dim: {}x{}".format(conv.shape[0], conv.shape[1]))
+    #ax.scatter(k2d, l2d, s=scatterfactor * I, linewidth=1.0, c='k')
+    # ax.imshow(I, cmap=color, vmin=abs(I).min(), vmax=abs(I).max(),
+    #           extent=[-boundary, boundary, -boundary, boundary])
+    ax.imshow(I, cmap=cmap, interpolation='gaussian', origin='lower',
+              extent=[-boundary, boundary, -boundary, boundary],
+              vmax=np.max(I)/1)
+    # ax.contourf(k2d, l2d, I, levels=levels, cmap=cmap)
+    # ax.contourf(k2d, l2d, conv, levels=levels, cmap=cmap)
+    plt.show()
+    #################
 
     # # 2d contourplot
     # ax = fig.add_subplot(1, 2, 1)
@@ -53,11 +99,11 @@ def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
     # ax.set_ylabel('l')
 
     # 2d scatter plot
-    ax = fig.add_subplot(1, 2, 2)
-    ax.scatter(k2d, l2d, s=scatterfactor * I, linewidth=1.0, c='k')
-    ax.set_title('HKL-plot')
-    ax.set_xlabel('k')
-    ax.set_ylabel('l')
+    # ax = fig.add_subplot(1, 2, 2)
+    # ax.scatter(k2d, l2d, s=scatterfactor * I, linewidth=1.0, c='k')
+    # ax.set_title('HKL-plot')
+    # ax.set_xlabel('k')
+    # ax.set_ylabel('l')
 
     # # 3d surface plot
     # ax = fig.add_subplot(4, 1, 3, projection='3d')
@@ -69,34 +115,23 @@ def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
     # ax = fig.add_subplot(4, 1, 4, projection='3d')
     # ax.scatter(k2d, l2d, I, c=I, cmap='plasma', linewidth=0.5)
 
-    plt.savefig('{}kl'.format(h))
-    plt.show()
-
-def gaussian(theta, lamb, sigma):
-    gauss = (1 / (2 * np.pi * sigma)) * np.exp(-(theta ** 2 + lamb ** 2) / (2 * sigma))
-    return gauss
-
-
-def convolute2d(matrix, sigma, len_k2d):
-    """Faltung eines 2d-Datensatzes mit Gauß-peaks"""
-    boundary = len_k2d # muss gleiche dimension, wie k space haben, dehsalb len(k2d)=len(l2d)
-    x_conv, y_conv = np.meshgrid(np.linspace(-boundary,  boundary, 2* boundary+1), np.linspace(-boundary,  boundary, 2* boundary+1)) # np.meshgrid(np.arange(-boundary,  boundary, 0.1), np.arange(- boundary,  boundary, 0.1))
-    g = gaussian(x_conv, y_conv, sigma)
-    convolved = scipy.signal.convolve2d(matrix, g,  boundary='wrap', mode='same') #boundary='symm', mode='same')
-    plt.imshow(convolved, cmap='viridis', interpolation='gaussian')
+    # plt.savefig('{}kl'.format(h))
     plt.show()
 
 
 def main():
     print(__doc__)
-    boundary = 3
+    boundary = 5 # Symmetric boundaries for K, L
+    print("k_max = {}".format(boundary))
+    print("l_max = {}".format(boundary))
+    diff = 0.08
+    print("delta_k = {}".format(diff))
     h = 0
-    n, k2d, l2d, h = kspacecreator(boundary, h)
-    # Strcture parameters
+    print("h={}".format(h))
+    n, k2d, l2d = kspacecreator(boundary, diff)
+    # Structure parameters
     a = 2.86  # in angstrom
-    b=a
-    c=a
-    scatterfactor = 2
+    scatterfactor = 0.1
     sigma=0.1
 
     x, y, z = 0.5, 0.5, 0.5
@@ -121,10 +156,11 @@ def main():
     f_fe4 = a_fe[3] * np.exp(- b_fe[3] * (((h * np.ones((n, n))) ** 2 + k2d ** 2 + l2d ** 2) / (4 * np.pi) ** 2))
     f_fe = f_fe1+f_fe2+f_fe3+f_fe4
     F_fe1_list, F_fe2_list = [], []
+    #np.exp(-B_iso_Fe / lamb * (np.sin(theta))**2)
     F_fe1_list.append(
-        f_fe * np.exp(-B_iso_Fe / lamb * (np.sin(theta))**2) * np.exp(1j * 2 * np.pi * (h * np.ones((n, n)) * fe1[0] + k2d * fe1[1] + l2d * fe1[2])))
+        f_fe  * np.exp(1j * 2 * np.pi * (h * np.ones((n, n)) * fe1[0] + k2d * fe1[1] + l2d * fe1[2])))
     F_fe2_list.append(
-        f_fe * np.exp(-B_iso_Fe / lamb * (np.sin(theta))**2) * np.exp(1j * 2 * np.pi * (h * np.ones((n, n)) * fe2[0] + k2d * fe2[1] + l2d * fe2[2])))
+        f_fe  * np.exp(1j * 2 * np.pi * (h * np.ones((n, n)) * fe2[0] + k2d * fe2[1] + l2d * fe2[2])))
     atoms_list = [F_fe1_list, F_fe2_list]  # create list with components corresponding to F evaluated for all atomic positions of element X with all k-space points
     F_str = np.zeros((n, n), dtype=complex)  # Structure factor with dimensions nxn
     pre_F_str = [np.zeros((n, n))]  # Hilfsgröße, in nächstem loop beschrieben
@@ -135,10 +171,10 @@ def main():
     for i in range(len(pre_F_str)):  # add together
         F_str = F_str + pre_F_str[i]
     I = np.absolute(F_str) ** 2  # Calculate intensity |F|^2
+    print("I_before={}".format(I))
 
     # Plot everything
-    plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor)
-    # convolute2d(np.asarray(I), sigma=sigma, len_k2d=len(k2d))
+    plotfunction(k2d, l2d, I, boundary, diff, A=1, s=0.001, levels=10)
 
 
 
@@ -161,6 +197,20 @@ if __name__ == '__main__':
 
 
 
+
+def gaussian(theta, lamb, sigma):
+    gauss = (1 / (2 * np.pi * sigma)) * np.exp(-(theta ** 2 + lamb ** 2) / (2 * sigma))
+    return gauss
+
+
+def convolute2d(matrix, sigma, len_k2d):
+    """Faltung eines 2d-Datensatzes mit Gauß-peaks"""
+    boundary = len_k2d # muss gleiche dimension, wie k space haben, dehsalb len(k2d)=len(l2d)
+    x_conv, y_conv = np.meshgrid(np.linspace(-boundary,  boundary, 2* boundary+1), np.linspace(-boundary,  boundary, 2* boundary+1)) # np.meshgrid(np.arange(-boundary,  boundary, 0.1), np.arange(- boundary,  boundary, 0.1))
+    g = gaussian(x_conv, y_conv, sigma)
+    convolved = scipy.signal.convolve2d(matrix, g,  boundary='wrap', mode='same') #boundary='symm', mode='same')
+    plt.imshow(convolved, cmap='viridis', interpolation='gaussian')
+    plt.show()
 
 
 

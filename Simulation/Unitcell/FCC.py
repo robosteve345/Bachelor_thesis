@@ -38,13 +38,26 @@ def gaussian(theta, lamb, sigma):
     return gauss
 
 
-def convolute2d(I, sigma):
+def convolute2d(I):
     """Faltung eines 2d-Datensatzes mit Gauß-peaks"""
-    k2d_conv, l2d_conv = np.meshgrid(np.arange(-sigma, sigma, 0.1), np.arange(-sigma, sigma, 0.1))
-    g = gaussian(k2d, l2d, sigma)
-    xrdsimulation = scipy.signal.convolve2d(I, g,  boundary='wrap', mode='full') #boundary='symm', mode='same')
+    k2d_conv, l2d_conv = np.meshgrid(np.linspace(-2,2,10), np.linspace(-1,2,10))
+    sigma=0.1
+    g = gaussian(k2d_conv, l2d_conv, sigma)
+    blurred = scipy.signal.convolve2d(I, g,  boundary='symm', mode='full')
     plt.imshow(blurred, cmap=cm.coolwarm, interpolation='nearest')
+    plt.imshow(I)
     plt.show()
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.plot3D(X,Y,Z)
+convolute2d()
+
+
+
+
+
+
 
 
 def scatter3d(I, x, y):
@@ -84,7 +97,6 @@ def main():
     #scatter3d(I, k2d, l2d)
     d2plot(I)
     # d3plot(I)
-
     plt.show()
 
 if __name__ == '__main__':
