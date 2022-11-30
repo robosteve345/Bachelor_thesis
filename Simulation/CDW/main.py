@@ -7,6 +7,7 @@ plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 # Times, Palatino, New Century Schoolbook, Bookman, Computer Modern Roman
 
+
 def translation(x, storage_x, storage_y, storage_z, i):
     """
     Translate atomic positions of X_x position
@@ -115,9 +116,10 @@ def plotallthisshit(k2d, l2d, I, h, scatterfactor):
 
 def main():
     print(__doc__)
+    ####### INPUT KSPACE: boundary / diff ≈ 100 sufficient resolution
+    diff = 0.01  # Distance between two kspace points
     l_boundary, k_boundary = 2, 2
     h = -3
-    # n, k2d, l2d, h = kspacecreator(boundary, h) # for normal plot
     ############################################ # For CDW Plot
     k0, l0 = 5, -6
     k = np.arange(k0 - k_boundary, k0 + k_boundary + 0.1, 0.1)
@@ -129,9 +131,8 @@ def main():
     # print("l2d={}".format(l2d))
     ############################################
     scatterfactor = 0.00008
-    a = 4.35  # in angstrom
-    c = 10.9  # in angstrom
-    z0 = 0.385  # from refinements...
+    a, c = 4.35, 10.9  # in angstrom
+    z0 = 0.385
     # print("K-space dimension n={}".format(n))
     print("K-space dimension n={}".format(n))
     print("H={}".format(h))
@@ -139,7 +140,7 @@ def main():
     print("Scaling factor for Plot={}".format(scatterfactor))
     
     ########################################################################################################
-    """Form factor calculation"""
+    ### FORM FACTOR CALCULATION
     # Form factors according to de Graed, structure of materials, chapter 12: Eu2+. Ga1+, Al3+
     a_eu, a_ga, a_al  = [24.0063, 19.9504, 11.8034, 3.87243], [15.2354, 6.7006, 4.3591, 2.9623], [4.17448, 3.3876, 1.20296, 0.528137]
     b_eu, b_ga, b_al = [2.27783, 0.17353, 11.6096, 26.5156], [3.0669, 0.2412, 10.7805, 61.4135], [1.93816, 4.14553, 0.228753, 8.28524]
@@ -160,7 +161,7 @@ def main():
     f_al4 = a_al[3] * np.exp(- b_al[3] * (((h * np.ones((n, n))) ** 2 + k2d ** 2 + l2d ** 2) / (4 * np.pi) ** 2))
     f_Al = f_al1+f_al2+f_al3+f_al4 
     #########################################################################################################
-    
+    ### INPUT CRYSTALLOGAPHY
     # Positions of atoms in 10 unit cells
     # Gebe ersten Vektor der verschobenen und nicht verschobenen Positionen der Atome an:
     # Translated positions about \vec{r} = (0.5,0.5,0.5)
@@ -218,8 +219,7 @@ def main():
     # plt.scatter(z_Ga1_T, np.ones(11) * 0.5, c='g', marker='.')
     # plt.scatter(z_Ga2_T, np.ones(11) * 0.5, c='b', marker='.')
     # #################################################################
-    z_ampl = -0.08
-    #np.array([-0.12, -0.01, -0.01, -0.01, -0.01, -0.01]) # -0.08
+    z_ampl = np.array([-0.12, -0.01, -0.01, -0.01, -0.01, -0.01]) # -0.08
     q_cdw = 1/10  # in r.l.u.
     print("CDW Modulation A*sin(q_cdw*z*2*pi):")
     print("q_cdw={}, A={}".format(q_cdw, z_ampl))
@@ -229,23 +229,23 @@ def main():
     for i in range(1, 41):
         z.append((i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)
         # Modulation 1: (-1)**i * z_ampl * np.sin(2*np.pi* q_cdw * z)
-        dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
+        #dz.append((-1)**i * z_ampl * (np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)))
         # weird.append((i/4 + 1/8 + 1/8 * (-1)**(i+1)))
 
         # Modulation 2: fourier series with q_cdw=0.10
-        #dz.append((-1)**i * z_ampl[0] * ( np.cos(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
-        #          (-1)**i * z_ampl[1] * ( np.cos(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
-        #          (-1)**i * z_ampl[2] * ( np.cos(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
-        #          (-1) ** i * z_ampl[3] * (np.cos(4*
-        #    2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(4*
-        #    2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
-        #          (-1) ** i * z_ampl[4] * (np.cos(
-        #    5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
-        #    5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
-        #          (-1) ** i * z_ampl[5] * (np.cos(
-        #    6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
-        #    6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i))
-        #          )
+        dz.append((-1)**i * z_ampl[0] * ( np.cos(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+                  (-1)**i * z_ampl[1] * ( np.cos(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*2*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+                  (-1)**i * z_ampl[2] * ( np.cos(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i) +  np.sin(2*3*np.pi*q_cdw *  (i/4 - 1/8) + 1/8*(-1)**(i+1)+zp*(-1)**i)) +
+                  (-1) ** i * z_ampl[3] * (np.cos(4*
+            2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(4*
+            2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
+                  (-1) ** i * z_ampl[4] * (np.cos(
+            5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
+            5 * 2 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i)) +
+                  (-1) ** i * z_ampl[5] * (np.cos(
+            6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i) + np.sin(
+            6 * 3 * np.pi * q_cdw * (i / 4 - 1 / 8) + 1 / 8 * (-1) ** (i + 1) + zp * (-1) ** i))
+                  )
     # print("input for sin from marein: {}".format(weird))
     print("Gallium z-positions and deviations dz:")
     print("z={}".format(np.round(z, 2)), "# z={}".format(len(z)),
@@ -364,7 +364,7 @@ def main():
     axs[0,1].legend(fontsize=15)
     # print("single peak: k={}, l={}".format(k2d[:, readout], l2d[:, readout]))
     # Projected intensity of desired [HKL]-peak
-    axs[1,1].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=3, label='[{}5L]'.format(h))
+    axs[1,1].plot(l2d[:, readout], I[:, readout] / np.max(I[:, readout]), marker='x', c='k', ls='--', lw=0.5, ms=3, label='[{}KL]'.format(h))
     axs[1,1].set_xlim(l0 - l_boundary, l0 + l_boundary)
     axs[1,1].set_xlabel(r"L (r.l.u.)", fontsize=15)
     axs[1,1].set_ylabel(r"Intensity (Rel.)", fontsize=15)
@@ -373,29 +373,8 @@ def main():
     axs[1,1].legend(fontsize=15)
     print("I_max = {}".format(np.sort(I[:, readout])[-1]))
     print("(I_max - I_[max-1])/I_max = {}".format((np.sort(I[:, readout])[-1] - np.sort(I[:, readout])[-2]) / np.sort(I[:, readout])[-1]))
-    # # 3d surface and scatter plot
-    # plotallthisshit(k2d, l2d, I, h=h, scatterfactor=scatterfactor)
-    
-    # for i in np.arange(0, (2*k_boundary+1)*10, 10):
-    #     print(i)
-    #     axs[1].scatter(k2d[:, i], l2d[:, i], s=I[:, i]*scatterfactor, linewidth=0.5, c='k'
-    #                    )
-    ################################################# # for several peaks
-    # m = 10
-    # for i in range(0,5):
-    #     print("k2d={}".format(k2d[:, i*m]))
-    #     print("l2d={}".format(l2d[:, i*m]))
-    #     axs[1].scatter(k2d[:, i*m], l2d[:, i*m], s=I[:, i*m]*scatterfactor, linewidth=0.5, c='k'
-    #                )
-    #     print(I[:, i*m])
-    #     #axs[1].scatter(k2d[i*5, :], l2d[i*5, :], s=I[i*5, :]*scatterfactor, linewidth=1.0, c='b'
-    #     #           )
-    #     # plt.show()
-    #################################################
-    plt.subplots_adjust(
-                        wspace=0.2,
-                        hspace=0.4)
-    plt.savefig('CDW_sim_HK0L0_FOURIER={}{}{}'.format(h, k0, l0), dpi=800)
+    plt.subplots_adjust(wspace=0.2, hspace=0.4)
+    # plt.savefig('CDW_sim_HK0L0_FOURIER={}{}{}'.format(h, k0, l0), dpi=300)
 
     plt.show()
 

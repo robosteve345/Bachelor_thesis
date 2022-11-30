@@ -76,7 +76,7 @@ def plotallthisshit(k2d, l2d, I, boundary, h, scatterfactor):
     # ax = fig.add_subplot(4, 1, 4, projection='3d')
     # ax.scatter(k2d, l2d, I, c=I, cmap='plasma', linewidth=0.5)
 
-    plt.savefig('{}kl_euga4_oneunitcell'.format(h), dpi=300)
+    plt.savefig('{}kl_euga4_oneunitcell.jpg'.format(h), dpi=500)
     plt.show()
 
 

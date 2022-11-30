@@ -148,7 +148,7 @@ def main():
     # ax2.text(x=1.2, y=10.62, s='EuGa$_4$ \n DAC', style='italic', fontsize=30, fontweight='bold')
     ax2.legend(fontsize=27, loc='lower right')
     plt.tight_layout()
-    # plt.savefig("DAC_EuGa4_structure_1_Version2.jpg", dpi=300)
+    plt.savefig("DAC_EuGa4_structure_1_Version2.jpg", dpi=300)
 
     fig, ax1 = plt.subplots()
     fig.subplots_adjust(right=0.75)
@@ -202,7 +202,7 @@ def main():
     ax2.tick_params(axis='y', labelcolor='y', labelsize=30, **tkw)
     # ax2.text(x=3.2, y=2.51, s=r'(b)', style='oblique', fontsize=27)
     plt.tight_layout()
-    # plt.savefig("DAC_EuGa4_structure_2_Version2.jpg", dpi=300)
+    plt.savefig("DAC_EuGa4_structure_2_Version2.jpg", dpi=300)
 
     fig, ax1 = plt.subplots()
     fig.subplots_adjust(right=0.75)
@@ -248,7 +248,7 @@ def main():
     ax2.set_ylim(110.7, 114.4)
     # ax2.text(x=3.2, y=115.2, s=r'(c)', style='oblique', fontsize=27)
     plt.tight_layout()
-    # plt.savefig("DAC_EuGa4_structure_3_Version2.jpg", dpi=300)
+    plt.savefig("DAC_EuGa4_structure_3_Version2.jpg", dpi=300)
     plt.show()
     #
     # m, sigma_m, dm, t, sigma_t, dt = lin_reg(p_exp293, V293, dy=np.zeros(4), sigma_y=dV293, plot=False)
