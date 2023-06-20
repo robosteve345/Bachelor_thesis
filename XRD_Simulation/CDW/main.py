@@ -31,21 +31,6 @@ def sin_modulation(GA_Z, z_ampl, q_cdw):
     return z_mod
 
 
-def anharmonic_modulation(GA_Z, z_ampl, q_cdw, n, phi):
-    """
-    :param GA_Z:
-    :param z_ampl:
-    :param q_cdw:
-    :param n: # of fourier components
-    :param phi:
-    :return:
-    """
-    z_mod = [0] * n
-    for i in (range(n)):
-        z_mod.append( z_ampl * np.cos(i * q_cdw * np.asarray(GA_Z) + phi))
-    return z_mod
-
-
 def kspacecreator(boundary, h):
     """Create kspace with integer points evenly distributed with periodic boundaries in KL
     :returns: n: integer, dimension of k-space

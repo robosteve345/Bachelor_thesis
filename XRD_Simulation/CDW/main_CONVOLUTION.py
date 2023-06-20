@@ -116,7 +116,7 @@ def F_Q(k2d, l2d, h, n, a_eu, a_ga, a_al, b_eu, b_ga, b_al, c_eu, c_ga, c_al, u_
 
     """Ga_z modulation:"""
     q_cdw = 1 / 10  # in r.l.u.
-    z_ampl = 0.1
+    z_ampl = 0
     print("CDW Modulation A*sin(q_cdw*z*2*pi):")
     print("q_cdw={}, A={}".format(q_cdw, z_ampl))
     zp = 0.13  # relative position Ga-Al in z-direction, FESTER WERT
@@ -342,7 +342,7 @@ def main():
     ####################################################################################################################
     ####### INPUT KSPACE: boundary / diff ≈ 100 sufficient resolution
     boundary = 5  # Symmetric boundaries for K, L
-    diff = 0.01  # Distance between two kspace points
+    diff = 1  # Distance between two kspace points
     h = 1  # H plane in kspace
     n, k2d, l2d = kspacecreator(boundary, diff)
     ####### INPUT CRYSTAL SYMMETRY

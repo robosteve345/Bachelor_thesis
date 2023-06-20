@@ -40,7 +40,7 @@ def modulation(q_cdw):
     # plt.scatter(z_Ga1_T, np.ones(11) * 0.5, c='g', marker='.')
     # plt.scatter(z_Ga2_T, np.ones(11) * 0.5, c='b', marker='.')
     # #################################################################
-    z_ampl = 0.0
+    z_ampl = -0.08
     print("CDW Ga-modulation z' = A*sin(q_cdw*z*2*pi):")
     print("q_cdw={}, A={}".format(q_cdw, z_ampl))
     zp = 0.1  # relative position Ga-Al in z-direction, FESTER WERT
@@ -330,7 +330,7 @@ def main():
     I = F_Q(diff, k2d, l2d, k_boundary, l_boundary, mod, q_cdw,
             h, n, a_eu, a_ga, a_al, b_eu, b_ga, b_al, c_eu,
             c_ga, c_al, u_list, theta, z0, lamb, DBW=True)
-    plotfunction(k2d, l2d, I, h, vmax=0.1, scatterfactor=scatterfactor,
+    plotfunction(k2d, l2d, I, h, vmax=0.01, scatterfactor=scatterfactor,
                  savefig=True, norm=True)
     ####################################################################################################################
 
