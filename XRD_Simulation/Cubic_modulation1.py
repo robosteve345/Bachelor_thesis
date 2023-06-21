@@ -7,6 +7,7 @@ from matplotlib.colors import LogNorm
 from matplotlib.pyplot import figure
 matplotlib.rcParams['font.family'] = "sans-serif"
 matplotlib.rc('text', usetex=True)
+from Cubic import maincubic
 
 """K-space creator"""
 def kspacecreator(k0, l0, kmax, lmax, deltak):
@@ -31,7 +32,7 @@ def Structurefactor(k2d, l2d, h, Unitary, Amplitude, q_cdw, noisefactor, f_list,
     x_Atom2, y_Atom2, z_Atom2 = [0.5], [0.5], [0.5]
     """Atomic positions modulation: commensurate with q_CDW = 0.2*2*pi/a of atom 2 (1/2, 1/2, 1/2)"""
     # Full translation of Atom1 & Atom2 for 6 unit cells
-    n = int(q_cdw ** (-1))
+    n = 5 # # of unit cells, should be q_cdw**-1
     for i in range(1, n):  # begins at 1 because unit cell 0 is already given
         translation(np.array([x_Atom1[0], y_Atom1[0], z_Atom1[0]]), x_Atom1, y_Atom1, z_Atom1, i)  # Atom1
         translation(np.array([x_Atom2[0], y_Atom2[0], z_Atom2[0]]), x_Atom2, y_Atom2, z_Atom2, i)  # Atom2
@@ -41,18 +42,17 @@ def Structurefactor(k2d, l2d, h, Unitary, Amplitude, q_cdw, noisefactor, f_list,
     # Final atomic positions
     Atom1, Atom2 = np.array([x_Atom1, y_Atom1, z_Atom1]), np.array([x_Atom2, y_Atom2, z_Atom2]),
     print("Atom1_z={}, Atom2_z={}".format(np.asarray(Atom1)[2, :], np.asarray(Atom2)[2, :]))
-    plt.plot(1 / 2 * np.ones(5) + np.arange(0, 5, 1), np.ones(5), label='equilibrium', ls='', marker='x')
+    plt.plot(1 / 2 * np.ones(n) + np.arange(0, n, 1), np.ones(n), label='equilibrium', ls='', marker='x')
     plt.xlabel('Unit cell')
     plt.ylabel('z')
-    plt.plot(Atom2[2], np.ones(5), label='distorted', ls='', marker='o')
+    plt.plot(Atom2[2], np.ones(n), label='distorted', ls='', marker='o')
     plt.legend()
     plt.show()
     """Scattering amplitudes F"""
     # Form factors
-    f_Atom1, f_Atom2 = f_list[0], f_list[1]
     F_Atom1_list, F_Atom2_list = [], []
     # Scattering Amplitudes
-    for i in range(0, 1):  # 0 to #unit cells(5+1) x
+    for i in range(0, n):  # 0 to #q_cdw
         F_Atom1_list.append(
             f_list[0] * np.exp(-1j * 2 * np.pi * (h * Unitary * Atom1[0, i] + k2d * Atom1[1, i] + l2d * Atom1[2, i]))
         )
@@ -100,7 +100,7 @@ def excludekpoints(deltak, I, k2d, l2d, kmax):
     ##############################################################################
 
 
-def plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, savefig=False):
+def plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, Amplitude, savefig=False):
     figure(figsize=(9, 7), dpi=100)
     plt.suptitle(r"Body centered cubic (bcc) with sinusoidal modulation of Atom2=(1/2,1/2,1/2)"
     #"Body centered cubic (bcc), F($\mathbf{Q}$)=$f(1 + e^{-i\pi(h+k+l)})$ \n $I=f^2(2+2\cos(\pi(h+k+l))), f=1$")
@@ -136,18 +136,19 @@ def plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, savefig=False):
     plt.subplot(2, 2, 4)
     # plt.title(r'$I(L)=f^2(4 + 2*(\cos(\pi(h+l)) + \cos(\pi(h-l)) + \cos(\pi(k+h)) + \cos(\pi(k-h))+\cos(\pi(k+l)) +\cos(\pi(k-l))), f=1$')
     plt.plot(l2d[:, 0], I[:, 0], ls='--', marker='.', label='K={}'.format(np.round(k[0], 2)))
-    plt.plot(l2d[:, 0], I[:, 1], ls='--', marker='.', label='K={}'.format(np.round(k[1], 2)))
-    plt.plot(l2d[:, 0], I[:, -7], ls='--', marker='.', label='K={}'.format(np.round(k[-7], 2)))
-    plt.plot(l2d[:, 0], I[:, -4], ls='--', marker='.', label='K={}'.format(np.round(k[-4], 2)))
+    # plt.plot(l2d[:, 0], I[:, int(len(k)/2)*deltak], ls='--', marker='.', label='K={}'.format(np.round(int(len(k)/2)*deltak, 2)))
+    plt.plot(l2d[:, 0], I[:, -1], ls='--', marker='.', label='K={}'.format(np.round(k[-1], 2)))
+    # plt.plot(l2d[:, 0], I[:, -7], ls='--', marker='.', label='K={}'.format(np.round(k[-7], 2)))
+    # plt.plot(l2d[:, 0], I[:, -4], ls='--', marker='.', label='K={}'.format(np.round(k[-4], 2)))
     plt.legend(loc='lower center')
     plt.ylabel(r"Intensity $I\propto F(\mathbf{Q})^2$")
     plt.xlabel("L(rlu)")
     if savefig==True:
-        plt.savefig("BCC_H={}.jpg".format(h), dpi=300)
+        plt.savefig("BCC_Modulation1_5unitcells_Ampl={}_H={}.jpg".format(h, Amplitude), dpi=300)
     else:
         pass
     plt.subplots_adjust(wspace=0.3)
-    plt.show()
+    plt.show(block=False)
 
 
 def main():
@@ -155,16 +156,16 @@ def main():
     k0, l0, kmax, lmax = 0, 0, 2, 2  # boundaries of K and L for the intensity maps
     deltak = 0.1  # or 0.1, k-space point distance
     h = 1  # H value in k space
-    Amplitude = 1 # Distortion amplitude
+    Amplitude = 0.02 # Distortion amplitude
     q_cdw = 0.2  # Distortion periodicity in 2pi/a
     noisefactor = 0.0 # Corrects noise to noisefactor*np.max(I)
     # Electronic form factors
-    f_list = [10, 1] # [Atom1, Atom2]
+    f_list = [1, 1] # [Atom1, Atom2]
     k2d, l2d, k, Unitary = kspacecreator(k0,l0,kmax, lmax,deltak)
     F, I = Structurefactor(k2d, l2d, h, Unitary, Amplitude, q_cdw, noisefactor, f_list, noise=True)
     I = excludekpoints(deltak, I, k2d, l2d, kmax)
-    plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, savefig=True)
-
+    plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, Amplitude, savefig=True)
+    maincubic()
 if __name__ == '__main__':
     main()
 
