@@ -5,7 +5,7 @@ Created on Sat Jun 17 17:52:02 2023
 
 @author: stevengebel
 """
-"""XRD Simulation"""
+"""XRD Simulation of a modulated bcc lattice with monoatomic basis"""
 
 import numpy as np
 import matplotlib
@@ -23,41 +23,60 @@ k = np.arange(k0-kmax, k0+kmax + deltak, deltak)
 l = np.arange(l0-lmax, l0+lmax + deltak, deltak)
 k2d, l2d = np.meshgrid(k, l)
 Unitary = np.ones((len(k2d), len(l2d)))  # Unitary matrix
-"""EuGa2Al2 atomic positions"""
-Eu1, Eu2, Al1, Al2, Ga1, Ga2 = np.array([[0],[0],[0]]), np.array([[1/2],[1/2],[1/2]]), np.array([[0],[1],[1]]), np.array([[1],[0],[1]]),\
-np.array([[1],[1],[1]]), np.array([[1],[0],[0]]), np.array([[1],[1],[0]]), np.array([[0],[0],[1]]), np.array([[0],[1],[0]])
-"""Atomic positions"""
 
+
+def translation(x, storage_x, storage_y, storage_z, i):
+    """
+    Translate atomic positions of X_x position
+    """
+    x_transl = x + np.array([0, 0, i])
+    storage_x.append(x_transl[0])
+    storage_y.append(x_transl[1])
+    storage_z.append(x_transl[2])
+
+
+"""Atomic positions"""
+x_Atom1, y_Atom1, z_Atom1 = [0], [0], [0]
+x_Atom2, y_Atom2, z_Atom2 = [0.5], [0.5], [0.5]
 """Modulation of BCC: commensurate with q_CDW = 0.2*2*pi/a of atom 2 (1/2, 1/2, 1/2)"""
-Atom1_list, Atom2_list = [[0],[0],[0]], [[1/2],[1/2],[1/2]]
 A = 1
+q_cdw = 0.2 # in 2pi/a
+# Full translation of Atom1 & Atom2 for 6 unit cells
+for i in range(1,len(q_cdw**(-1))+1):
+        translation(np.array([x_Atom1[0], y_Atom1[0], z_Atom1[0]]), x_Atom1, y_Atom1, z_Atom1, i)  # Atom1
+        translation(np.array([x_Atom2[0], y_Atom2[0], z_Atom2[0]]), x_Atom2, y_Atom2, z_Atom2, i) # Atom2
+
 for i in range(1, 6):
     print(i)
     print(np.sin(0.2*2*np.pi*i))
-    Atom2_list[2].append(i + A*np.sin(0.2*2*np.pi*i))
+    Atom2_list[2].append(i + A*np.sin(q_cdw*2*np.pi*i))
     Atom2_list[0].append(Atom1_list[0])
     Atom2_list[1].append(Atom1_list[1])
     Atom1_list[2].append(i)
     Atom1_list[0].append(Atom1_list[0])
     Atom1_list[1].append(Atom1_list[1])
-print(Atom1_list[2], Atom2_list[2])
-plt.plot(np.arange(0, 6, 1), 1/2*np.ones(6) + np.arange(0, 6, 1), label='equilibrium', ls='', marker='x')
+print("Atom1_list={}, Atom2_list={}".format(np.asarray(Atom1_list)[0,0], np.asarray(Atom2_list)[-1,-1]))
+plt.plot(1/2*np.ones(6) + np.arange(0, 6, 1), np.ones(6), label='equilibrium', ls='', marker='x')
 plt.xlabel('Unit cell')
 plt.ylabel('z')
-plt.plot(np.arange(0, 6, 1), Atom2_list[2], label='distorted', ls='', marker='o')
+plt.plot(Atom2_list[2], np.ones(6), label='distorted', ls='', marker='o')
 plt.legend()
 plt.show()
+
+# Final atomic positions
+Atom1, Atom2 = np.array([x_Atom1, y_Atom1, z_Atom1]), np.array([x_Atom2, y_Atom2, z_Atom2]),
+
 """Scattering amplitudes F"""
 # Form factors
 f_Atom1, f_Atom2, f_Atom3, f_Atom4 = 1, 1, 1, 1
+F_Atom1_list, F_Atom2_list = [],[]
 # Scattering Amplitudes
-for i in range(0,3):
-    f*np.exp(-2*np.pi*1j*(h*Unitary*Atom1_list[i] + k2d*Atom1[1] + l2d*Atom1[2]))
-# F_Atom1 = f_Atom1 * np.exp(-2*np.pi*1j*(h*Unitary*Atom1[0] + k2d*Atom1[1] + l2d*Atom1[2]))
-# F_Atom2 = f_Atom2 * np.exp(-2*np.pi*1j*(h*Unitary*Atom2[0] + k2d*Atom2[1] + l2d*Atom2[2]))
-# F_Atom3 = f_Atom3 * np.exp(-2*np.pi*1j*(h*Unitary*Atom3[0] + k2d*Atom3[1] + l2d*Atom3[2]))
-# F_Atom4 = f_Atom4 * np.exp(-2*np.pi*1j*(h*Unitary*Atom4[0] + k2d*Atom4[1] + l2d*Atom4[2]))
-F = F_Atom1 + F_Atom2 # + F_Atom3 + F_Atom4# + 0.1*np.random.rand(len(k2d), len(k2d)) # + F_Ga + F_Al
+for i in range(1):  # 2 atoms for each sort, for Eu with 1 position and 2 for each al and ga with translation
+    F_Atom1_list.append(
+        f_Atom1  * np.exp(
+            1j * 2 * np.pi * (h * np.ones((n, n)) * Atom1[0, i] + k2d * Eu[1, i] + l2d * Eu[2, i]))
+    )
+F = np.sum(F_Atom1) + np.sum(F_Atom2) # + F_Atom3 + F_Atom4# + 0.1*np.random.rand(len(k2d), len(k2d)) # + F_Ga + F_Al
 """Intensity I"""
 I = np.abs(np.round(F, 3))**2 # I \propto F(Q)^2, F complex
 ##############################################################################
@@ -122,12 +141,10 @@ plt.plot(l2d[:,0], I[:,0], ls='--', marker='.', label='K={}'.format(np.round(k[0
 plt.plot(l2d[:,0], I[:,1], ls='--', marker='.', label='K={}'.format(np.round(k[1], 2)))
 plt.plot(l2d[:,0], I[:,-7], ls='--', marker='.', label='K={}'.format(np.round(k[-7], 2)))
 plt.plot(l2d[:,0], I[:,-4], ls='--', marker='.', label='K={}'.format(np.round(k[-4], 2)))
-# plt.plot(l2d[:,0], I[:,int(2/deltak)], ls='--', marker='.', label='K={}'.format(int(k0-kmax+2)))
-# plt.plot(l2d[:,0], I[:,int(3/deltak)], ls='--', marker='.', label='K={}'.format(int(k0-kmax+3)))
 plt.legend(loc='lower center')
 plt.ylabel(r"Intensity $I\propto F(\mathbf{Q})^2$")
 plt.xlabel("L(rlu)")
 # plt.savefig("BCC_H={}.jpg".format(h), dpi=300)
-# plt.subplots_adjust(wspace=0.3)
-# plt.show()
+plt.subplots_adjust(wspace=0.3)
+plt.show()
 
