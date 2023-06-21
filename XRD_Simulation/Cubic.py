@@ -35,27 +35,29 @@ Unitary = np.ones((len(k2d), len(l2d)))  # Unitary matrix
 Base centered cubic"""
 # Atom1, Atom2 = np.array([[0],[0],[0]]), np.array([[0],[1/2],[1/2]])
 """Body centered cubic ("full cell")"""
-Atom1, Atom2, Atom3, Atom4, Atom5, Atom6, Atom7, Atom8, Atom9 = np.array([[0],[0],[0]]), np.array([[1/2],[1/2],[1/2]]), np.array([[0],[1],[1]]), np.array([[1],[0],[1]]),\
-np.array([[1],[1],[1]]), np.array([[1],[0],[0]]), np.array([[1],[1],[0]]), np.array([[0],[0],[1]]), np.array([[0],[1],[0]])
+Atom1, Atom2 = np.array([[0],[0],[0]]), np.array([[1/2],[1/2],[1/2]])
+#, Atom3, Atom4, Atom5, Atom6, Atom7, Atom8, Atom9 = np.array([[0],[1],[1]]), np.array([[1],[0],[1]]),\
+# np.array([[1],[1],[1]]), np.array([[1],[0],[0]]), np.array([[1],[1],[0]]), np.array([[0],[0],[1]]), np.array([[0],[1],[0]])
 """Face centered cubic (fcc)"""
 #Atom1, Atom2, Atom3, Atom4 = np.array([[0],[0],[0]]), np.array([[1/2],[1/2],[0]]), \
 #    np.array([[0],[1/2],[1/2]]), np.array([[1/2],[0],[1/2]])
 """Simple cubic"""
-Atom1 = np.array([[0],[0],[0]])
+# Atom1 = np.array([[0],[0],[0]])
 """Scattering amplitudes F"""
 # Form factors
-f_Atom1, f_Atom2, f_Atom3, f_Atom4, f_Atom5, f_Atom6, f_Atom7, f_Atom8, f_Atom9= 1, 1, 1, 1, 1, 1, 1, 1, 1
+f_Atom1, f_Atom2 = 1, 1
+# f_Atom3, f_Atom4, f_Atom5, f_Atom6, f_Atom7, f_Atom8, f_Atom9= 1, 1, 1, 1, 1, 1, 1, 1, 1
 # Scattering Amplitudes
 F_Atom1 = f_Atom1 * np.exp(-2*np.pi*1j*(h*Unitary*Atom1[0] + k2d*Atom1[1] + l2d*Atom1[2]))
 F_Atom2 = f_Atom2 * np.exp(-2*np.pi*1j*(h*Unitary*Atom2[0] + k2d*Atom2[1] + l2d*Atom2[2]))
-F_Atom3 = f_Atom3 * np.exp(-2*np.pi*1j*(h*Unitary*Atom3[0] + k2d*Atom3[1] + l2d*Atom3[2]))
-F_Atom4 = f_Atom4 * np.exp(-2*np.pi*1j*(h*Unitary*Atom4[0] + k2d*Atom4[1] + l2d*Atom4[2]))
-F_Atom5 = f_Atom5 * np.exp(-2*np.pi*1j*(h*Unitary*Atom5[0] + k2d*Atom5[1] + l2d*Atom5[2]))
-F_Atom6 = f_Atom6 * np.exp(-2*np.pi*1j*(h*Unitary*Atom6[0] + k2d*Atom6[1] + l2d*Atom6[2]))
-F_Atom7 = f_Atom7 * np.exp(-2*np.pi*1j*(h*Unitary*Atom7[0] + k2d*Atom7[1] + l2d*Atom7[2]))
-F_Atom8 = f_Atom8 * np.exp(-2*np.pi*1j*(h*Unitary*Atom8[0] + k2d*Atom8[1] + l2d*Atom8[2]))
-F_Atom9 = f_Atom9 * np.exp(-2*np.pi*1j*(h*Unitary*Atom9[0] + k2d*Atom9[1] + l2d*Atom9[2]))
-F = F_Atom1 + F_Atom2 + F_Atom3 + F_Atom4 + F_Atom5 + F_Atom6 + F_Atom7 + F_Atom8 + F_Atom9# + 0.1*np.random.rand(len(k2d), len(k2d)) # + F_Ga + F_Al
+# F_Atom3 = f_Atom3 * np.exp(-2*np.pi*1j*(h*Unitary*Atom3[0] + k2d*Atom3[1] + l2d*Atom3[2]))
+# F_Atom4 = f_Atom4 * np.exp(-2*np.pi*1j*(h*Unitary*Atom4[0] + k2d*Atom4[1] + l2d*Atom4[2]))
+# F_Atom5 = f_Atom5 * np.exp(-2*np.pi*1j*(h*Unitary*Atom5[0] + k2d*Atom5[1] + l2d*Atom5[2]))
+# F_Atom6 = f_Atom6 * np.exp(-2*np.pi*1j*(h*Unitary*Atom6[0] + k2d*Atom6[1] + l2d*Atom6[2]))
+# F_Atom7 = f_Atom7 * np.exp(-2*np.pi*1j*(h*Unitary*Atom7[0] + k2d*Atom7[1] + l2d*Atom7[2]))
+# F_Atom8 = f_Atom8 * np.exp(-2*np.pi*1j*(h*Unitary*Atom8[0] + k2d*Atom8[1] + l2d*Atom8[2]))
+# F_Atom9 = f_Atom9 * np.exp(-2*np.pi*1j*(h*Unitary*Atom9[0] + k2d*Atom9[1] + l2d*Atom9[2]))
+F = F_Atom1 + F_Atom2# + F_Atom3 + F_Atom4 + F_Atom5 + F_Atom6 + F_Atom7 + F_Atom8 + F_Atom9# + 0.1*np.random.rand(len(k2d), len(k2d)) # + F_Ga + F_Al
 """Intensity I"""
 I = np.abs(np.round(F, 3))**2 # I \propto F(Q)^2, F complex
 ##############################################################################
@@ -93,6 +95,7 @@ plt.contourf(l2d, k2d, I, cmap='viridis', extent=(k0-kmax, k0+kmax, l0-lmax, l0+
 plt.colorbar()
 plt.xlabel("K(rlu)")
 plt.ylabel("L(rlu)")
+plt.legend('H={}'.format(h), loc='upper center')
 
 plt.subplot(2, 2, 2)
 plt.title("Gaussian interpolation")
