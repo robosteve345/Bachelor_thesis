@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from matplotlib.pyplot import figure
 matplotlib.rcParams['font.family'] = "sans-serif"
-matplotlib.rc('text', usetex=True)
-from Cubic import maincubic
+# matplotlib.rc('text', usetex=True)
+# from Cubic import maincubic
 
 """K-space creator"""
 def kspacecreator(k0, l0, kmax, lmax, deltak):
@@ -41,6 +41,7 @@ def Structurefactor(Atom1, Atom2, k2d, l2d, h, Unitary, Amplitude, q_cdw, n, noi
     # Final atomic positions
     Atom1, Atom2 = np.array([x_Atom1, y_Atom1, z_Atom1]), np.array([x_Atom2, y_Atom2, z_Atom2]),
     print("Atom1_z={}, Atom2_z={}".format(np.asarray(Atom1)[2, :], np.asarray(Atom2)[2, :]))
+    print("Atom1={}, Atom2={}".format(np.asarray(Atom1), np.asarray(Atom2)))
     """Scattering amplitudes F"""
     # Form factors
     F_Atom1_list, F_Atom2_list = [], []
@@ -67,8 +68,6 @@ def Structurefactor(Atom1, Atom2, k2d, l2d, h, Unitary, Amplitude, q_cdw, n, noi
         I = I + noisefactor*np.max(I) * np.random.rand(len(k2d), len(k2d))  # Add random noise with maximum noisefactor
     else:
         pass
-    print(Atom2)
-    print(I)
     return F, I, Atom1, Atom2, n
 
 def excludekpoints(deltak, I, k2d, l2d, kmax, n):
@@ -95,13 +94,12 @@ def excludekpoints(deltak, I, k2d, l2d, kmax, n):
     #     for i in l_intlist:  # Set unallowed L-values for intensities to 0
     #         I[i, :] = 0
 
-
     return I
     ##############################################################################
 
 
 def plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, n, Amplitude, Atom1, Atom2, savefig=False):
-    figure(figsize=(13, 7), dpi=100)
+    # figure(figsize=(13, 7), dpi=100)
     plt.suptitle(r"Body centered cubic (bcc) with sinusoidal modulation of Atom2=(1/2,1/2,1/2)"
     #"Body centered cubic (bcc), F($\mathbf{Q}$)=$f(1 + e^{-i\pi(h+k+l)})$ \n $I=f^2(2+2\cos(\pi(h+k+l))), f=1$")
     # I_fcc = f^2(4 + 2*(\cos(\pi(h+l)) + \cos(\pi(h-l)) + \cos(\pi(k+h)) + \cos(\pi(k-h))".format(h)
@@ -133,7 +131,7 @@ def plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, n, Amplitude, Atom1, Ato
     plt.ylabel("L(rlu)")
 
     plt.subplot(2, 2, 3)
-    plt.scatter(k2d, l2d, c=I, s=I, cmap='viridis', label=r'$I \propto F(\mathbf{Q})^2$')
+    #plt.scatter(k2d, l2d, c=I, s=I, cmap='viridis', label=r'$I \propto F(\mathbf{Q})^2$')
     plt.colorbar()
     plt.legend(loc='upper right')
     plt.ylabel("L(rlu)")
@@ -152,7 +150,7 @@ def plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, n, Amplitude, Atom1, Ato
     else:
         pass
     plt.subplots_adjust(wspace=0.3)
-    plt.show(block=False)
+    plt.show()
 
 
 def main():
@@ -164,9 +162,9 @@ def main():
     k0, l0, kmax, lmax = 0, 0, 2, 2  # boundaries of K and L for the intensity maps
     deltak = 0.1  # or 0.1, k-space point distance
     h = 1  # H value in k space
-    Amplitude = 0.10 # Distortion amplitude
-    q_cdw = 0.2  # Distortion periodicity in 2pi/a
-    n = int(q_cdw**(-1))  # # of unit cells, should be q_cdw**-1
+    Amplitude = 0.0 # Distortion amplitude
+    q_cdw = 0.5  # Distortion periodicity in 2pi/a
+    n = 1 # int(q_cdw**(-1))  # # of unit cells, should be q_cdw**-1
     noisefactor = 0.0 # Corrects noise to noisefactor*np.max(I)
     # Electronic form factors
     f_list = [1, 1] # [Atom1, Atom2]
@@ -174,7 +172,7 @@ def main():
     F, I, Atom1, Atom2, n = Structurefactor(Atom1, Atom2, k2d, l2d, h, Unitary, Amplitude, q_cdw, n, noisefactor, f_list, noise=True)
     I = excludekpoints(deltak, I, k2d, l2d, kmax, n)
     plotfunction(k2d, l2d, h, k0, l0, kmax, lmax, I, k, n, Amplitude, Atom1, Atom2, savefig=True)
-    maincubic()
+    # maincubic()
 if __name__ == '__main__':
     main()
 
